@@ -1,6 +1,7 @@
 # Unreleased
 
 - Fix command description
+- Fix default koth create scoreboard. You now have a real configuration that will be created
 
 # 3.1.0
 

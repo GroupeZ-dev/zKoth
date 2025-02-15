@@ -123,8 +123,8 @@ public class ZKoth extends ZUtils implements Koth {
         this.captureSeconds = captureSeconds;
         this.minLocation = minLocation;
         this.maxLocation = maxLocation;
-        this.startScoreboard = new ScoreboardConfiguration();
-        this.cooldownScoreboard = new ScoreboardConfiguration();
+        this.startScoreboard = ScoreboardConfiguration.start();
+        this.cooldownScoreboard = ScoreboardConfiguration.cooldown();
         this.cooldownStart = 300;
         this.stopAfterSeconds = 3600;
         this.enableStartCapMessage = true;
