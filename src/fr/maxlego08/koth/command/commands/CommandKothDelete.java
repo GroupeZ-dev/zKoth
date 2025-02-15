@@ -12,7 +12,7 @@ public class CommandKothDelete extends VCommand {
 		super(plugin);
 		this.setPermission(Permission.ZKOTH_DELETE);
 		this.addSubCommand("spawn");
-		this.setDescription(Message.DESCRIPTION_SPAWN);
+		this.setDescription(Message.DESCRIPTION_DELETE);
 		this.addRequireArg("name", (a,b) -> plugin.getKothManager().getNameKoths());
 	}
 

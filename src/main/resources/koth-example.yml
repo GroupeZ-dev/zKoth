@@ -125,9 +125,9 @@ webhook:
   enable: true
   url: "https://discord.com/api/webhooks/1187068418923438190/<your webhook>"
   # List of Koth events that trigger the webhook
-  # - SPAWN: When Koth spawns
-  # - START: When Koth starts
-  # - STOP: When Koth stops
+  # - SPAWN: When Koth spawns (or with /koth now)
+  # - START: When Koth starts (or with /koth spawn)
+  # - STOP: When Koth stops (or with /koth stop)
   # - START_CAP: When capture starts
   # - WIN: When Koth is won
   # - LOOSE: When Koth capture is lost

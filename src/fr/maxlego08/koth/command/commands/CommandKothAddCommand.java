@@ -14,7 +14,7 @@ public class CommandKothAddCommand extends VCommand {
         super(plugin);
         this.setPermission(Permission.ZKOTH_COMMAND_ADD);
         this.addSubCommand("addcommand", "ac");
-        this.setDescription(Message.DESCRIPTION_SPAWN);
+        this.setDescription(Message.DESCRIPTION_ADD_COMMAND);
         this.addRequireArg("name", (a, b) -> plugin.getKothManager().getNameKoths());
         this.addRequireArg("type", (a, b) -> Arrays.asList("start", "win"));
         this.addRequireArg("command");

@@ -14,7 +14,7 @@ public class CommandKothLoot extends VCommand {
         super(plugin);
         this.setPermission(Permission.ZKOTH_LOOT);
         this.addSubCommand("loot");
-        this.setDescription(Message.DESCRIPTION_SPAWN);
+        this.setDescription(Message.DESCRIPTION_LOOT);
         this.addRequireArg("name", (a, b) -> plugin.getKothManager().getNameKoths());
         this.addOptionalArg("page", (a, b) -> Arrays.asList("1", "2", "3", "4", "5", "6", "7", "8", "9"));
     }

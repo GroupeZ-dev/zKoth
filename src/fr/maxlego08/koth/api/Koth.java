@@ -13,6 +13,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -95,6 +96,19 @@ public interface Koth {
      * @return A list of {@code String} commands to execute at the end.
      */
     List<String> getEndCommands();
+    
+    /**
+     * Retrieves a collection of all nearby players according to the koth's scoreboard radius
+     *
+     * @return A collection of {@link Player}s currently within the koth's scoreboard radius
+     */
+    Collection<Player> getAllPlayersNearby();
+    
+    String getFormattedPlayersNearbyList();
+    /**
+     * @return Counts the number of nearby players from {@link Koth#getAllPlayersNearby()}
+     */
+    int countNearbyPlayers();
 
     /**
      * Moves the KOTH game area to a new location defined by minimum and maximum corner locations.

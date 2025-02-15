@@ -1086,23 +1086,20 @@ public abstract class ZUtils extends MessageUtils {
         });
     }
 
-    /**
-     * Create a progress bar
-     * https://www.spigotmc.org/threads/progress-bars-and-percentages.276020/
-     *
-     * @param current
-     * @param max
-     * @param totalBars
-     * @param symbol
-     * @param completedColor
-     * @param notCompletedColor
-     * @return string
-     */
     public String getProgressBar(int current, int max, int totalBars, char symbol, String completedColor, String notCompletedColor) {
         float percent = (float) current / max;
         int progressBars = (int) (totalBars * percent);
 
-        return color(Strings.repeat(completedColor + symbol, progressBars) + Strings.repeat(notCompletedColor + symbol, totalBars - progressBars));
+        if (progressBars <= 0) {
+            progressBars = 1;
+        }
+
+        int result = totalBars - progressBars;
+        if (result <= 0) {
+            result = 1;
+        }
+
+        return color(Strings.repeat(completedColor + symbol, progressBars) + Strings.repeat(notCompletedColor + symbol, result));
     }
 
     /**

@@ -71,6 +71,14 @@ public class KothPlaceholder extends ZUtils {
             Optional<Koth> optional = this.kothManager.getKoth(args);
             return String.valueOf(optional.filter(koth -> koth.getStatus() == KothStatus.START).isPresent());
         });
+        placeholder.register("nearby_players_", (player, args) -> {
+            Optional<Koth> optional = this.kothManager.getKoth(args);
+            return optional.map(Koth::getFormattedPlayersNearbyList).orElse("");
+        });
+        placeholder.register("count_nearby_players_", (player, args) -> {
+            Optional<Koth> optional = this.kothManager.getKoth(args);
+            return optional.map(koth -> String.valueOf(koth.countNearbyPlayers())).orElse("0");
+        });
     }
 
     private void register(String key, ReturnConsumer<Koth> consumer) {

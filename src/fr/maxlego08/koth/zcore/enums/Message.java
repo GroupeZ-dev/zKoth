@@ -53,6 +53,7 @@ public enum Message {
     DESCRIPTION_AXE("Getting the selection axe"),
     DESCRIPTION_CREATE("Create new koth"),
     DESCRIPTION_LIST("Get koth list"),
+    DESCRIPTION_ADD_COMMAND("Add a command to a koth"),
 
     AXE_RECEIVE("§7You have just received the axe for zone selection."),
     AXE_NAME("§6✤ §7zKoth axe §6✤"),

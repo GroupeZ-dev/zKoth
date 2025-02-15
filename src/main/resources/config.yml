@@ -54,6 +54,8 @@
 # %zkoth_active_<koth name>% - Lets you know if a koth is active
 # %zkoth_cooldown_<koth name>% - Lets you know if a koth is in cooldown
 # %zkoth_start_<koth name>% - Lets you know if a koth is start
+# %zkoth_nearby_players_<koth name>% - All players within scoreboard radius of the provided koth
+# %zkoth_count_nearby_players_<koth name>% - Count of all players within scoreboard radius of the provided koth
 #
 # Supported Scoreboard Plugin:
 # - FeatherBoard
@@ -119,6 +121,8 @@ noKoth: 'X'
 schedulerMillisecond: 1000
 
 removeChestSec: 120
+
+scoreboardRadius: 50
 
 # Value that will be used for score placeholders if the position does not exist.
 defaultPlayerResult:

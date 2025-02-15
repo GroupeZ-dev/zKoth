@@ -1,6 +1,6 @@
 package fr.maxlego08.koth.api.utils;
 
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 
 public class ScoreboardConfiguration {
@@ -15,8 +15,31 @@ public class ScoreboardConfiguration {
         this.lines = lines;
     }
 
-    public ScoreboardConfiguration() {
-        this(false, "zKoth", Collections.singletonList("Default Configuration"));
+    public static ScoreboardConfiguration cooldown() {
+        return new ScoreboardConfiguration(true, "&f&l  &7&oZkoth &f&l ", Arrays.asList(
+                "&r",
+                "#16db47Location:",
+                " #636363 #ffffffX: %centerX% Y: %centerY% Z: %centerZ%",
+                "&r",
+                "#16db47Starts in:",
+                " #636363 #ffffff%spawnFormat%",
+                "&r"
+        ));
+    }
+
+    public static ScoreboardConfiguration start() {
+        return new ScoreboardConfiguration(true, "&f&l  &7&oZkoth &f&l ", Arrays.asList(
+                "&r",
+                "#16db47Location",
+                " #636363 #ffffffX: %centerX% Y: %centerY% Z: %centerZ%",
+                "&r",
+                "#16db47Player:",
+                " #636363 #ffffff%playerName%",
+                "&r",
+                "#16db47Time left:",
+                " #636363 #ffffff%captureFormat%",
+                "&r"
+        ));
     }
 
     public boolean isEnable() {

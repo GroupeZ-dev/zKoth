@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>fr.maxlego08.koth</groupId>
   <artifactId>zKoth</artifactId>
-  <version>3.1.0</version>
+  <version>3.1.1</version>
   <build>
     <sourceDirectory>src</sourceDirectory>
     <resources>
@@ -73,6 +73,13 @@
               <shadedPattern>fr.maxlego08.koth.fastboard</shadedPattern>
             </relocation>
           </relocations>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>17</source>
+          <target>17</target>
         </configuration>
       </plugin>
     </plugins>
@@ -238,8 +245,8 @@
     </dependency>
   </dependencies>
   <properties>
-    <maven.compiler.target>8</maven.compiler.target>
-    <maven.compiler.source>8</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
+    <maven.compiler.source>17</maven.compiler.source>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 </project>

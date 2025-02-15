@@ -23,7 +23,7 @@ public class TabHook implements KothScoreboard {
         TabAPI api = TabAPI.getInstance();
         TabPlayer tabPlayer = api.getPlayer(player.getUniqueId());
         ScoreboardManager manager = TabAPI.getInstance().getScoreboardManager();
-        System.out.println(tabPlayer + " - " + manager);
+        // System.out.println(tabPlayer + " - " + manager);
         if (tabPlayer != null && manager != null) {
             manager.toggleScoreboard(tabPlayer, true);
             Bukkit.getScheduler().runTaskLater(this.plugin, () -> after.accept(player), 10);
