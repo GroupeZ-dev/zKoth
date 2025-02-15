@@ -1,7 +1,8 @@
 # Unreleased
 
 - Fix command description
-- Fix default koth create scoreboard. You now have a real configuration that will be created
+- Fix default koth create scoreboard. A real configuration will now be created
+- Fixed Discord Webhook. The configuration loading and sending are now correct
 
 # 3.1.0
 

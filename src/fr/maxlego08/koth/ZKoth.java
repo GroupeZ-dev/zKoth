@@ -439,8 +439,10 @@ public class ZKoth extends ZUtils implements Koth {
         if (this.blacklistTeamId.contains(this.kothTeam.getTeamId(player))) return;
 
         Cuboid cuboid = this.getCuboid();
-        
+        if (player.getWorld() != cuboid.getWorld()) return;
+
         Location pLoc = player.getLocation();
+
         if (pLoc.distanceSquared(this.getCenter()) > Math.pow(scoreboardRadius, 2)) {
             plugin.getScoreBoardManager().delete(player);
             plugin.getScoreBoardManager().getBoards().remove(player);
