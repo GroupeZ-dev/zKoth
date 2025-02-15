@@ -4,6 +4,7 @@ import fr.maxlego08.koth.api.Koth;
 import fr.maxlego08.koth.api.KothEvent;
 import fr.maxlego08.koth.zcore.utils.ZUtils;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.Plugin;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.awt.*;
@@ -27,11 +28,11 @@ public class DiscordWebhook extends ZUtils {
 
     private final String url;
     private transient final Pattern STRIP_EXTRAS_PATTERN = Pattern.compile("(?i)§[0-9A-FK-ORX]");
+    private final List<EmbedObject> embeds = new ArrayList<>();
     private String content;
     private String username;
     private String avatarUrl;
     private boolean tts;
-    private List<EmbedObject> embeds = new ArrayList<>();
 
     /**
      * Constructs a new DiscordWebhook instance
@@ -62,7 +63,7 @@ public class DiscordWebhook extends ZUtils {
         this.embeds.add(embed);
     }
 
-    public void execute(Koth koth) throws IOException {
+    public void execute(Plugin plugin, Koth koth) throws IOException {
         if (this.content == null && this.embeds.isEmpty()) {
             throw new IllegalArgumentException("Set content or add at least one EmbedObject");
         }
@@ -155,35 +156,40 @@ public class DiscordWebhook extends ZUtils {
             json.put("embeds", embedObjects.toArray());
         }
 
-        URL url = new URL(this.url);
-        HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
-        connection.addRequestProperty("Content-Type", "application/json");
-        connection.addRequestProperty("User-Agent", "Java-DiscordWebhook-BY-Gelox_");
-        connection.setDoOutput(true);
-        connection.setRequestMethod("POST");
+        this.runAsync(plugin, () -> {
+            try {
+                URL url = new URL(this.url);
+                HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+                connection.addRequestProperty("Content-Type", "application/json");
+                connection.addRequestProperty("User-Agent", "Java-DiscordWebhook-BY-Gelox_");
+                connection.setDoOutput(true);
+                connection.setRequestMethod("POST");
 
-        OutputStream stream = connection.getOutputStream();
-        stream.write(json.toString().getBytes(StandardCharsets.UTF_8));
-        stream.flush();
-        stream.close();
+                OutputStream stream = connection.getOutputStream();
+                stream.write(json.toString().getBytes(StandardCharsets.UTF_8));
+                stream.flush();
+                stream.close();
 
-        connection.getInputStream().close();
-        connection.disconnect();
+                connection.getInputStream().close();
+                connection.disconnect();
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
+        });
     }
 
     public static class EmbedObject {
 
-        private KothEvent event;
+        private final KothEvent event;
+        private final List<Field> fields;
         private String title;
         private String description;
         private String url;
         private DiscordColor color;
-
         private Footer footer;
         private String thumbnail;
         private String image;
         private Author author;
-        private List<Field> fields = new ArrayList<>();
 
         public EmbedObject(YamlConfiguration configuration, String path) {
 
@@ -193,6 +199,7 @@ public class DiscordWebhook extends ZUtils {
             } catch (IllegalArgumentException ignored) {
                 event = KothEvent.START;
             }
+            this.event = event;
 
             this.title = configuration.getString(path + "title", null);
             this.description = configuration.getString(path + "description", null);
@@ -293,23 +300,12 @@ public class DiscordWebhook extends ZUtils {
 
         @Override
         public String toString() {
-            return "EmbedObject{" +
-                    "event=" + event +
-                    ", title='" + title + '\'' +
-                    ", description='" + description + '\'' +
-                    ", url='" + url + '\'' +
-                    ", color=" + color +
-                    ", footer=" + footer +
-                    ", thumbnail='" + thumbnail + '\'' +
-                    ", image='" + image + '\'' +
-                    ", author=" + author +
-                    ", fields=" + fields +
-                    '}';
+            return "EmbedObject{" + "event=" + event + ", title='" + title + '\'' + ", description='" + description + '\'' + ", url='" + url + '\'' + ", color=" + color + ", footer=" + footer + ", thumbnail='" + thumbnail + '\'' + ", image='" + image + '\'' + ", author=" + author + ", fields=" + fields + '}';
         }
 
         private class Footer {
-            private String text;
-            private String iconUrl;
+            private final String text;
+            private final String iconUrl;
 
             private Footer(String text, String iconUrl) {
                 this.text = text;
@@ -330,9 +326,9 @@ public class DiscordWebhook extends ZUtils {
         }
 
         private class Author {
-            private String name;
-            private String url;
-            private String iconUrl;
+            private final String name;
+            private final String url;
+            private final String iconUrl;
 
             private Author(String name, String url, String iconUrl) {
                 this.name = name;
@@ -341,8 +337,7 @@ public class DiscordWebhook extends ZUtils {
             }
 
             public Author(YamlConfiguration configuration, String path) {
-                this(configuration.getString(path + "name"), configuration.getString(path + "url"),
-                        configuration.getString(path + "iconUrl"));
+                this(configuration.getString(path + "name"), configuration.getString(path + "url"), configuration.getString(path + "iconUrl"));
             }
 
             private String getName() {
@@ -359,9 +354,9 @@ public class DiscordWebhook extends ZUtils {
         }
 
         private class Field {
-            private String name;
-            private String value;
-            private boolean inline;
+            private final String name;
+            private final String value;
+            private final boolean inline;
 
             private Field(String name, String value, boolean inline) {
                 this.name = name;
@@ -415,7 +410,7 @@ public class DiscordWebhook extends ZUtils {
                 } else if (val instanceof Boolean) {
                     builder.append(val);
                 } else if (val instanceof JSONObject) {
-                    builder.append(val.toString());
+                    builder.append(val);
                 } else if (val.getClass().isArray()) {
                     builder.append("[");
                     int len = Array.getLength(val);

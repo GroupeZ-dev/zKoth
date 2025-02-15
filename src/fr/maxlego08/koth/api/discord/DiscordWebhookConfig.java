@@ -44,23 +44,21 @@ public class DiscordWebhookConfig extends ZUtils {
     }
 
     public void send(Plugin plugin, Koth koth, KothEvent event) {
-
+        
         if (this.isEnable) {
 
             DiscordWebhook discordWebhook = new DiscordWebhook(this.url);
 
             Optional<DiscordWebhook.EmbedObject> optional = this.embeds.stream().filter(e -> e.getEvent() == event).findFirst();
-            if (!optional.isPresent()) return;
+            if (optional.isEmpty()) return;
 
             discordWebhook.addEmbed(optional.get());
 
-            this.runAsync(plugin, () -> {
                 try {
-                    discordWebhook.execute(koth);
+                    discordWebhook.execute(plugin, koth);
                 } catch (IOException exception) {
                     exception.printStackTrace();
                 }
-            });
         }
     }
 
