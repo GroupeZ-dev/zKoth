@@ -103,8 +103,12 @@ public class ScoreBoardManager extends ZUtils {
     private Consumer<Player> create(FastBoard current, Player player, String title) {
         return p -> {
 
-            if (current != null)
-                current.delete();
+            if (current != null) {
+                if (!current.isDeleted()) {
+                    current.delete();
+                }
+            }
+
             this.boards.remove(player);
 
             FastBoard board = new FastBoard(player);
