@@ -75,6 +75,9 @@ public class ScoreBoardManager extends ZUtils {
     }
 
     public void update() {
+
+        if (this.lines == null) return;
+
         this.boards.forEach((player, board) -> {
             board.updateLines(this.lines.accept(player));
         });

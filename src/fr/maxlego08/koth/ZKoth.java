@@ -42,7 +42,16 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -111,7 +120,7 @@ public class ZKoth extends ZUtils implements Koth {
         this.progressBar = progressBar;
         this.randomCommands = randomCommands;
         this.maxRandomCommands = maxRandomCommands;
-        
+
         this.scoreboardRadius = plugin.getConfig().getInt("scoreboardRadius", 50);
     }
 
@@ -140,7 +149,7 @@ public class ZKoth extends ZUtils implements Koth {
         this.progressBar = new ProgressBar(10, '-', "&a", "&7");
         this.randomCommands = new ArrayList<>();
         this.maxRandomCommands = 0;
-        
+
         this.scoreboardRadius = plugin.getConfig().getInt("scoreboardRadius", 50);
     }
 
@@ -846,19 +855,20 @@ public class ZKoth extends ZUtils implements Koth {
     public Player getCurrentPlayer() {
         return this.currentPlayer;
     }
-    
+
     @Override
     public List<Player> getAllPlayersNearby() {
-        return getCenter().getNearbyPlayers(scoreboardRadius).stream().toList();
+        var center = getCenter();
+        return center.getWorld().getNearbyPlayers(center, scoreboardRadius).stream().toList();
     }
-    
+
     @Override
     public String getFormattedPlayersNearbyList() {
         return getAllPlayersNearby().stream()
-            .map(Player::getName)
-            .collect(Collectors.joining(", "));
+                .map(Player::getName)
+                .collect(Collectors.joining(", "));
     }
-    
+
     @Override
     public int countNearbyPlayers() {
         return getAllPlayersNearby().size();
