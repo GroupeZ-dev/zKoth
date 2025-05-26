@@ -1,6 +1,5 @@
 package fr.maxlego08.koth.hook.scoreboard;
 
-import fr.maxlego08.koth.KothPlugin;
 import fr.maxlego08.koth.api.KothScoreboard;
 import org.bukkit.entity.Player;
 

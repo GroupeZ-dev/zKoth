@@ -2,8 +2,6 @@ package fr.maxlego08.koth.save;
 
 import fr.maxlego08.koth.KothPlugin;
 import fr.maxlego08.koth.api.utils.PlayerResult;
-import fr.maxlego08.koth.zcore.utils.storage.Persist;
-import fr.maxlego08.koth.zcore.utils.storage.Savable;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.util.Arrays;

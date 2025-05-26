@@ -2,7 +2,6 @@ package fr.maxlego08.koth.api.discord;
 
 import fr.maxlego08.koth.api.Koth;
 import fr.maxlego08.koth.api.KothEvent;
-import fr.maxlego08.koth.zcore.utils.ZUtils;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 
@@ -11,6 +10,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Array;
+import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 /**
  * Class used to execute Discord Webhooks with low effort
  */
-public class DiscordWebhook extends ZUtils {
+public class DiscordWebhook {
 
     private final String url;
     private transient final Pattern STRIP_EXTRAS_PATTERN = Pattern.compile("(?i)§[0-9A-FK-ORX]");
@@ -156,9 +156,9 @@ public class DiscordWebhook extends ZUtils {
             json.put("embeds", embedObjects.toArray());
         }
 
-        this.runAsync(plugin, () -> {
+        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
             try {
-                URL url = new URL(this.url);
+                URL url = new URI(this.url).toURL();
                 HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
                 connection.addRequestProperty("Content-Type", "application/json");
                 connection.addRequestProperty("User-Agent", "Java-DiscordWebhook-BY-Gelox_");

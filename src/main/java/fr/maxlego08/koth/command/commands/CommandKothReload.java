@@ -6,7 +6,6 @@ import fr.maxlego08.koth.save.Config;
 import fr.maxlego08.koth.zcore.enums.Message;
 import fr.maxlego08.koth.zcore.enums.Permission;
 import fr.maxlego08.koth.zcore.utils.commands.CommandType;
-import org.bukkit.inventory.ItemStack;
 
 public class CommandKothReload extends VCommand {
 

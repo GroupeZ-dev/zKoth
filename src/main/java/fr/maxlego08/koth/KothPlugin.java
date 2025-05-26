@@ -44,7 +44,7 @@ public class KothPlugin extends ZPlugin {
         this.storageManager = new StorageManager(this);
         this.kothManager = new KothManager(this);
 
-        this.registerCommand("zkoth", new CommandKoth(this), "koth");
+        this.registerCommand("zkoth", new CommandKoth(this), "fr/maxlego08/koth");
 
         this.saveDefaultConfig();
         // this.addSave(Config.getInstance());

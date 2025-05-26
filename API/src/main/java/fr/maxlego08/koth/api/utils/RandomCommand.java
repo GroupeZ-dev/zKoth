@@ -1,10 +1,9 @@
 package fr.maxlego08.koth.api.utils;
 
-import fr.maxlego08.koth.zcore.utils.ZUtils;
-
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
-public class RandomCommand extends ZUtils {
+public class RandomCommand {
 
     private final int percent;
     private final List<String> commands;
@@ -23,6 +22,6 @@ public class RandomCommand extends ZUtils {
     }
 
     public boolean canUse() {
-        return percent >= getNumberBetween(0, 100);
+        return percent >= ThreadLocalRandom.current().nextInt(0, 100);
     }
 }
