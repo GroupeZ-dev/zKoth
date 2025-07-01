@@ -1,6 +1,6 @@
 package fr.maxlego08.koth.loader;
 
-import fr.maxlego08.koth.zcore.utils.ProgressBar;
+import fr.maxlego08.koth.api.utils.ProgressBar;
 import fr.maxlego08.koth.zcore.utils.ZUtils;
 import fr.maxlego08.koth.zcore.utils.loader.Loader;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -22,9 +22,9 @@ public class ProgressBarLoader extends ZUtils implements Loader<ProgressBar> {
 
     @Override
     public void save(ProgressBar progressBar, YamlConfiguration configuration, String path) {
-        configuration.set(path + "length", progressBar.getLength());
-        configuration.set(path + "symbol", progressBar.getSymbol());
-        configuration.set(path + "completedColor", progressBar.getCompletedColor());
-        configuration.set(path + "notCompletedColor", progressBar.getNotCompletedColor());
+        configuration.set(path + "length", progressBar.length());
+        configuration.set(path + "symbol", progressBar.symbol());
+        configuration.set(path + "completedColor", progressBar.completedColor());
+        configuration.set(path + "notCompletedColor", progressBar.notCompletedColor());
     }
 }

@@ -1,4 +1,4 @@
-package fr.maxlego08.koth.zcore.utils;
+package fr.maxlego08.koth.api.utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;

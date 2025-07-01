@@ -4,7 +4,7 @@ import fr.maxlego08.koth.KothPlugin;
 import fr.maxlego08.koth.api.KothScoreboard;
 import fr.maxlego08.koth.save.Config;
 import fr.maxlego08.koth.zcore.utils.ZUtils;
-import fr.maxlego08.koth.zcore.utils.interfaces.CollectionConsumer;
+import fr.maxlego08.koth.api.utils.interfaces.CollectionConsumer;
 import fr.mrmicky.fastboard.FastBoard;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

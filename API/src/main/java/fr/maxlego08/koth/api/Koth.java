@@ -1,13 +1,13 @@
 package fr.maxlego08.koth.api;
 
 import fr.maxlego08.koth.api.discord.DiscordWebhookConfig;
+import fr.maxlego08.koth.api.utils.Cuboid;
 import fr.maxlego08.koth.api.utils.HologramConfig;
 import fr.maxlego08.koth.api.utils.PlayerResult;
+import fr.maxlego08.koth.api.utils.ProgressBar;
 import fr.maxlego08.koth.api.utils.RandomCommand;
 import fr.maxlego08.koth.api.utils.ScoreboardConfiguration;
-import fr.maxlego08.koth.zcore.utils.Cuboid;
-import fr.maxlego08.koth.zcore.utils.ProgressBar;
-import fr.maxlego08.koth.zcore.utils.interfaces.CollectionConsumer;
+import fr.maxlego08.koth.api.utils.interfaces.CollectionConsumer;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -96,15 +96,16 @@ public interface Koth {
      * @return A list of {@code String} commands to execute at the end.
      */
     List<String> getEndCommands();
-    
+
     /**
      * Retrieves a collection of all nearby players according to the koth's scoreboard radius
      *
      * @return A collection of {@link Player}s currently within the koth's scoreboard radius
      */
     Collection<Player> getAllPlayersNearby();
-    
+
     String getFormattedPlayersNearbyList();
+
     /**
      * @return Counts the number of nearby players from {@link Koth#getAllPlayersNearby()}
      */

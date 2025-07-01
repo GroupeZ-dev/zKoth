@@ -9,7 +9,7 @@ import fr.maxlego08.koth.api.discord.DiscordWebhookConfig;
 import fr.maxlego08.koth.api.utils.HologramConfig;
 import fr.maxlego08.koth.api.utils.RandomCommand;
 import fr.maxlego08.koth.api.utils.ScoreboardConfiguration;
-import fr.maxlego08.koth.zcore.utils.ProgressBar;
+import fr.maxlego08.koth.api.utils.ProgressBar;
 import fr.maxlego08.koth.zcore.utils.ZUtils;
 import fr.maxlego08.koth.zcore.utils.loader.Loader;
 import fr.maxlego08.koth.zcore.utils.nms.ItemStackUtils;

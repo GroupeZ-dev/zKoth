@@ -4,6 +4,7 @@ import com.google.common.base.Strings;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import fr.maxlego08.koth.KothPlugin;
+import fr.maxlego08.koth.api.utils.ProgressBar;
 import fr.maxlego08.koth.zcore.enums.EnumInventory;
 import fr.maxlego08.koth.zcore.enums.Message;
 import fr.maxlego08.koth.zcore.enums.Permission;
@@ -1054,18 +1055,6 @@ public abstract class ZUtils extends MessageUtils {
     }
 
     /**
-     * Allows to make an itemstack shine
-     *
-     * @param itemStack
-     */
-    public void glow(ItemStack itemStack) {
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        itemMeta.addEnchant(Enchantment.ARROW_DAMAGE, 1, true);
-        itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-        itemStack.setItemMeta(itemMeta);
-    }
-
-    /**
      * Allows you to clear a player's inventory, remove potion effects and put
      * him on life support
      *
@@ -1111,7 +1100,7 @@ public abstract class ZUtils extends MessageUtils {
      * @return string
      */
     public String getProgressBar(int current, int max, ProgressBar progressBar) {
-        return this.getProgressBar(current, max, progressBar.getLength(), progressBar.getSymbol(), progressBar.getCompletedColor(), progressBar.getNotCompletedColor());
+        return this.getProgressBar(current, max, progressBar.length(), progressBar.symbol(), progressBar.completedColor(), progressBar.notCompletedColor());
     }
 
     /**

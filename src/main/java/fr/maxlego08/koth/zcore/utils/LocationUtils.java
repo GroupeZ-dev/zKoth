@@ -1,5 +1,6 @@
 package fr.maxlego08.koth.zcore.utils;
 
+import fr.maxlego08.koth.api.utils.Cuboid;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;

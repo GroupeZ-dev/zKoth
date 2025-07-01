@@ -1,4 +1,4 @@
-package fr.maxlego08.koth.zcore.utils.interfaces;
+package fr.maxlego08.koth.api.utils.interfaces;
 
 @FunctionalInterface
 public interface StringConsumer<T> {

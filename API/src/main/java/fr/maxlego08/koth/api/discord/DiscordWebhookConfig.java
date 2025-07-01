@@ -2,7 +2,6 @@ package fr.maxlego08.koth.api.discord;
 
 import fr.maxlego08.koth.api.Koth;
 import fr.maxlego08.koth.api.KothEvent;
-import fr.maxlego08.koth.zcore.utils.ZUtils;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
@@ -12,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class DiscordWebhookConfig extends ZUtils {
+public class DiscordWebhookConfig {
 
     private final String url;
     private final boolean isEnable;
@@ -44,7 +43,7 @@ public class DiscordWebhookConfig extends ZUtils {
     }
 
     public void send(Plugin plugin, Koth koth, KothEvent event) {
-        
+
         if (this.isEnable) {
 
             DiscordWebhook discordWebhook = new DiscordWebhook(this.url);
@@ -54,11 +53,11 @@ public class DiscordWebhookConfig extends ZUtils {
 
             discordWebhook.addEmbed(optional.get());
 
-                try {
-                    discordWebhook.execute(plugin, koth);
-                } catch (IOException exception) {
-                    exception.printStackTrace();
-                }
+            try {
+                discordWebhook.execute(plugin, koth);
+            } catch (IOException exception) {
+                exception.printStackTrace();
+            }
         }
     }
 

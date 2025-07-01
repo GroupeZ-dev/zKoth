@@ -3,7 +3,7 @@ author: Maxlego08
 main: fr.maxlego08.koth.KothPlugin
 website: https://www.spigotmc.org/resources/76749/
 description: Default plugin developed by GroupeZ
-version: ${project.version}
+version: ${version}
 api-version: 1.13
 softdepend:
   - PlaceholderAPI

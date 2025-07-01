@@ -3,7 +3,7 @@ package fr.maxlego08.koth.zcore.utils.players;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import fr.maxlego08.koth.zcore.utils.interfaces.StringConsumer;
+import fr.maxlego08.koth.api.utils.interfaces.StringConsumer;
 import org.bukkit.Bukkit;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarFlag;

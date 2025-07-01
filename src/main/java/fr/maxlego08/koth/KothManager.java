@@ -12,7 +12,7 @@ import fr.maxlego08.koth.inventory.KothHolder;
 import fr.maxlego08.koth.loader.KothLoader;
 import fr.maxlego08.koth.zcore.enums.Message;
 import fr.maxlego08.koth.zcore.logger.Logger;
-import fr.maxlego08.koth.zcore.utils.Cuboid;
+import fr.maxlego08.koth.api.utils.Cuboid;
 import fr.maxlego08.koth.zcore.utils.ZUtils;
 import fr.maxlego08.koth.zcore.utils.builder.ItemBuilder;
 import fr.maxlego08.koth.zcore.utils.loader.Loader;
