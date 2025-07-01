@@ -180,12 +180,6 @@ public class ItemBuilder extends ZUtils implements Cloneable {
 		return this;
 	}
 
-	/**
-	 * 
-	 * @param format
-	 * @param args
-	 * @return
-	 */
 	public ItemBuilder addLine(String format) {
 		if (lore == null)
 			lore = new ArrayList<String>();
@@ -193,41 +187,21 @@ public class ItemBuilder extends ZUtils implements Cloneable {
 		return this;
 	}
 
-	/**
-	 * 
-	 * @param lores
-	 * @return
-	 */
 	public ItemBuilder setLore(String... lores) {
 		this.lore = Arrays.asList(lores);
 		return this;
 	}
 
-	/**
-	 * 
-	 * @param name
-	 * @return
-	 */
 	public ItemBuilder setName(String name) {
 		this.name = name;
 		return this;
 	}
 
-	/**
-	 * 
-	 * @param durability
-	 * @return
-	 */
 	public ItemBuilder durability(int durability) {
 		this.durability = durability;
 		return this;
 	}
 
-	/**
-	 * 
-	 * @param name
-	 * @return
-	 */
 	public ItemBuilder owner(Player name) {
 		return owner(name.getName());
 	}

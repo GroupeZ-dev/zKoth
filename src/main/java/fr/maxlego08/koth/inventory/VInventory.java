@@ -46,23 +46,10 @@ public abstract class VInventory extends ZUtils implements Cloneable {
 		return id;
 	}
 
-	/**
-	 * Allows you to create the spigot inventory object
-	 * 
-	 * @param name
-	 * @return this
-	 */
 	protected void createInventory(String name) {
 		createInventory(name, 54);
 	}
 
-	/**
-	 * Allows you to create the spigot inventory object
-	 * 
-	 * @param name - Inventory name
-	 * @param size - Inventory Size
-	 * @return this
-	 */
 	protected void createInventory(String name, int size) {
 		this.guiName = name;
 		this.inventory = Bukkit.createInventory(null, size, name);

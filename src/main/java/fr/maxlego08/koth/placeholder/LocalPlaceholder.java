@@ -56,13 +56,7 @@ public class LocalPlaceholder {
 	public void setPrefix(String prefix) {
 		this.prefix = prefix;
 	}
-	
-	/**
-	 * 
-	 * @param player
-	 * @param displayName
-	 * @return
-	 */
+
 	public String setPlaceholders(Player player, String placeholder) {
 
 		if (placeholder == null || !placeholder.contains("%")) {

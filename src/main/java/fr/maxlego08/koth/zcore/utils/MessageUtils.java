@@ -113,12 +113,6 @@ public abstract class MessageUtils extends LocationUtils {
 		}
 	}
 
-	/**
-	 * 
-	 * @param player
-	 * @param message
-	 * @param args
-	 */
 	protected void broadcast(Message message, Object... args) {
 		for (Player player : Bukkit.getOnlinePlayers()) {
 			message(player, message, args);
@@ -130,12 +124,6 @@ public abstract class MessageUtils extends LocationUtils {
 		Bukkit.broadcastMessage(Message.PREFIX.msg() + message);
 	}
 
-	/**
-	 * 
-	 * @param player
-	 * @param message
-	 * @param args
-	 */
 	protected void actionMessage(Player player, Message message, Object... args) {
 		ActionBar.sendActionBar(player, this.papi(getMessage(message, args), player));
 	}

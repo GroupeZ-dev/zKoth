@@ -167,44 +167,18 @@ public abstract class ZUtils extends MessageUtils {
         return itemStack.hasItemMeta() && itemStack.getItemMeta().hasDisplayName();
     }
 
-    /**
-     * Check if the item name is the same as the given string
-     *
-     * @param stack
-     * @param name
-     * @return true if the item name is the same as string
-     */
     protected boolean same(ItemStack itemStack, String name) {
         return this.hasDisplayName(itemStack) && itemStack.getItemMeta().getDisplayName().equals(name);
     }
 
-    /**
-     * Check if the item name contains the given string
-     *
-     * @param stack
-     * @param name
-     * @return true if the item name contains the string
-     */
     protected boolean contains(ItemStack itemStack, String name) {
         return this.hasDisplayName(itemStack) && itemStack.getItemMeta().getDisplayName().contains(name);
     }
 
-    /**
-     * Remove the item from the player's hand
-     *
-     * @param player
-     * @param number of items to withdraw
-     */
     protected void removeItemInHand(Player player) {
         removeItemInHand(player, 64);
     }
 
-    /**
-     * Remove the item from the player's hand
-     *
-     * @param player
-     * @param number of items to withdraw
-     */
     protected void removeItemInHand(Player player, int how) {
         if (player.getItemInHand().getAmount() > how)
             player.getItemInHand().setAmount(player.getItemInHand().getAmount() - how);
@@ -212,13 +186,6 @@ public abstract class ZUtils extends MessageUtils {
         player.updateInventory();
     }
 
-    /**
-     * Check if two locations are identical
-     *
-     * @param first  location
-     * @param second location
-     * @return true if both rentals are the same
-     */
     protected boolean same(Location l, Location l2) {
         return (l.getBlockX() == l2.getBlockX()) && (l.getBlockY() == l2.getBlockY()) && (l.getBlockZ() == l2.getBlockZ()) && l.getWorld().getName().equals(l2.getWorld().getName());
     }
@@ -234,14 +201,6 @@ public abstract class ZUtils extends MessageUtils {
         teleport(player, delay, location, null);
     }
 
-    /**
-     * Teleport a player to a given location with a given delay
-     *
-     * @param player   who will be teleported
-     * @param delay    before the teleportation of the player
-     * @param location where the player will be teleported
-     * @param code     executed when the player is teleported or not
-     */
     protected void teleport(Player player, int delay, Location location, Consumer<Boolean> cmd) {
         if (teleportPlayers.contains(player.getName())) {
             message(player, Message.TELEPORT_ERROR);
@@ -358,10 +317,6 @@ public abstract class ZUtils extends MessageUtils {
         return name.substring(0, 1).toUpperCase() + name.substring(1);
     }
 
-    /**
-     * @param string
-     * @return
-     */
     protected String name(ItemStack itemStack) {
         return this.getItemName(itemStack);
     }
@@ -432,30 +387,15 @@ public abstract class ZUtils extends MessageUtils {
         }, 0, delay);
     }
 
-    /**
-     * @param player
-     * @param inventoryId
-     */
     protected void createInventory(KothPlugin plugin, Player player, EnumInventory inventory) {
         createInventory(plugin, player, inventory, 1);
     }
 
-    /**
-     * @param player
-     * @param inventoryId
-     * @param page
-     */
     protected void createInventory(KothPlugin plugin, Player player, EnumInventory inventory, int page) {
         createInventory(plugin, player, inventory, page, new Object() {
         });
     }
 
-    /**
-     * @param player
-     * @param inventoryId
-     * @param page
-     * @param objects
-     */
     protected void createInventory(KothPlugin plugin, Player player, EnumInventory inventory, int page, Object... objects) {
         plugin.getInventoryManager().createInventory(inventory, player, page, objects);
     }
@@ -488,20 +428,10 @@ public abstract class ZUtils extends MessageUtils {
         return permissible.hasPermission(permission);
     }
 
-    /**
-     * @param delay
-     * @param runnable
-     */
     protected TimerTask scheduleFix(Plugin plugin, long delay, BiConsumer<TimerTask, Boolean> consumer) {
         return this.scheduleFix(plugin, delay, delay, consumer);
     }
 
-    /**
-     * @param plugin
-     * @param startAt
-     * @param delay
-     * @param runnable
-     */
     protected TimerTask scheduleFix(Plugin plugin, long startAt, long delay, BiConsumer<TimerTask, Boolean> consumer) {
         TimerTask task = new TimerTask() {
             @Override
@@ -518,12 +448,6 @@ public abstract class ZUtils extends MessageUtils {
         return task;
     }
 
-    /**
-     * Get random element from list
-     *
-     * @param elements
-     * @return element
-     */
     protected <T> T randomElement(List<T> element) {
         if (element.size() == 0) {
             return null;
@@ -641,10 +565,6 @@ public abstract class ZUtils extends MessageUtils {
         return new TextComponent(message);
     }
 
-    /**
-     * @param message
-     * @return
-     */
     protected TextComponent setHoverMessage(TextComponent component, String... messages) {
         BaseComponent[] list = new BaseComponent[messages.length];
         for (int a = 0; a != messages.length; a++)
@@ -653,10 +573,6 @@ public abstract class ZUtils extends MessageUtils {
         return component;
     }
 
-    /**
-     * @param message
-     * @return
-     */
     protected TextComponent setHoverMessage(TextComponent component, List<String> messages) {
         BaseComponent[] list = new BaseComponent[messages.size()];
         for (int a = 0; a != messages.size(); a++)

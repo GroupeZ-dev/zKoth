@@ -334,12 +334,6 @@ public abstract class VCommand extends Arguments {
 		return this;
 	}
 
-	/**
-	 * Adds sub orders
-	 * 
-	 * @param subCommand
-	 * @return this
-	 */
 	public VCommand addSubCommand(VCommand command) {
 		command.setParent(this);
 		this.plugin.getCommandManager().registerCommand(command);
@@ -580,12 +574,6 @@ public abstract class VCommand extends Arguments {
 		this.subCommands.addAll(aliases);
 	}
 
-	/**
-	 * Allows to send the syntax of the commands
-	 * 
-	 * @param commandString
-	 * @param sender
-	 */
 	public void syntaxMessage() {
 		this.subVCommands.forEach(command -> {
 			if (command.getPermission() == null || hasPermission(sender, command.getPermission())) {

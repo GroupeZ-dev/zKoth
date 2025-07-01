@@ -205,9 +205,6 @@ public class ZInventoryManager extends ListenerAdapter {
 		}
 	}
 
-	/**
-	 * @param id
-	 */
 	public void closeAllPlayer(int... ids) {
 		for (int currentId : ids) {
 			closeAllPlayer(currentId);

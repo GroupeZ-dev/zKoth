@@ -28,25 +28,12 @@ public abstract class YamlUtils extends ZUtils {
 		return plugin.getConfig();
 	}
 
-	/**
-	 * Get config
-	 * 
-	 * @param path
-	 * @return {@link YamlConfiguration}
-	 */
 	protected YamlConfiguration getConfig(File file) {
 		if (file == null)
 			return null;
 		return YamlConfiguration.loadConfiguration(file);
 	}
 
-	/**
-	 * Get config
-	 * 
-	 * @param path
-	 * @return {@link YamlConfiguration}
-	 * @throws InventoryFileNotFoundException
-	 */
 	protected YamlConfiguration getConfig(String path) {
 		File file = new File(plugin.getDataFolder() + "/" + path);
 		if (!file.exists())

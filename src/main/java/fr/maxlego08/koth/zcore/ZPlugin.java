@@ -208,23 +208,11 @@ public abstract class ZPlugin extends JavaPlugin {
         return inventoryManager;
     }
 
-    /**
-     * Check if plugin is enable
-     *
-     * @param pluginName
-     * @return
-     */
     protected boolean isEnable(Plugins pl) {
         Plugin plugin = getPlugin(pl);
         return plugin == null ? false : plugin.isEnabled();
     }
 
-    /**
-     * Get plugin for plugins enum
-     *
-     * @param pluginName
-     * @return
-     */
     protected Plugin getPlugin(Plugins plugin) {
         return Bukkit.getPluginManager().getPlugin(plugin.getName());
     }

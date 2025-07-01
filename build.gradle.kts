@@ -1,10 +1,11 @@
 plugins {
     `java-library`
     id("com.gradleup.shadow") version "9.0.0-beta11"
+    id("re.alwyn974.groupez.repository") version "1.0.0"
 }
 
 group = "fr.maxlego08.koth"
-version = "1.0.0.0"
+version = "3.2.0"
 
 extra.set("targetFolder", file("target/"))
 extra.set("apiFolder", file("target-api/"))
@@ -15,6 +16,7 @@ allprojects {
 
     apply(plugin = "java-library")
     apply(plugin = "com.gradleup.shadow")
+    apply(plugin = "re.alwyn974.groupez.repository")
 
     group = "fr.maxlego08.menu"
     version = rootProject.version
@@ -40,12 +42,19 @@ allprojects {
         }
     }
 
+    java {
+        withSourcesJar()
+        withJavadocJar()
+    }
+
     tasks.compileJava {
         options.encoding = "UTF-8"
     }
 
     tasks.javadoc {
         options.encoding = "UTF-8"
+        if (JavaVersion.current().isJava9Compatible)
+            (options as StandardJavadocDocletOptions).addBooleanOption("html5", true)
     }
 
     dependencies {
@@ -73,6 +82,12 @@ allprojects {
         implementation("fr.mrmicky:fastboard:2.1.5")
         implementation("com.tcoded:FoliaLib:0.5.1")
         implementation("fr.maxlego08.sarah:sarah:1.18")
+    }
+
+    tasks.shadowJar {
+        archiveBaseName.set("zKoth")
+        archiveAppendix.set(if (project.path == ":") "" else project.name)
+        archiveClassifier.set("")
     }
 
 }

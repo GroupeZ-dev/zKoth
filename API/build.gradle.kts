@@ -1,18 +1,19 @@
 plugins {
-    `maven-publish`
+    id("re.alwyn974.groupez.publish") version "1.0.0"
 }
 
 rootProject.extra.properties["sha"]?.let { sha ->
     version = sha
 }
 
-dependencies {
-    // compileOnly(files("../libs/zMenu-API-1.1.0.0.jar"))
-}
-
 tasks {
     shadowJar {
-        relocate("com.tcoded.folialib", "fr.maxlego08.koth.libs.folia")
+        relocate("com.tcoded.folialib", "fr.maxlego08.menu.hooks.folialib")
+        relocate("fr.traqueur.currencies", "fr.maxlego08.menu.hooks.currencies")
+        relocate("de.tr7zw.changeme.nbtapi", "fr.maxlego08.menu.hooks.nbtapi")
+        relocate("com.cryptomorin.xseries", "fr.maxlego08.menu.hooks.xseries")
+        relocate("fr.maxlego08.sarah", "fr.maxlego08.menu.hooks.sarah")
+        relocate("net.objecthunter.exp4j", "fr.maxlego08.menu.hooks.exp4j")
 
         destinationDirectory.set(rootProject.extra["apiFolder"] as File)
     }
@@ -22,28 +23,6 @@ tasks {
     }
 }
 
-publishing {
-    repositories {
-        maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/${System.getenv("GITHUB_ACTOR")}/zKoth")
-            credentials {
-                username = project.findProperty("gpr.user") as String? ?: System.getenv("GITHUB_ACTOR")
-                password = project.findProperty("gpr.key") as String? ?: System.getenv("GITHUB_TOKEN")
-            }
-        }
-    }
-
-    publications {
-        register<MavenPublication>("gpr") {
-            // https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-apache-maven-registry#publishing-a-package
-            pom {
-                groupId = project.group as String?
-                name = "${rootProject.name}-${project.name}"
-                artifactId = name.get().lowercase()
-                version = project.version as String?
-            }
-            artifact(tasks.shadowJar)
-        }
-    }
+publishConfig {
+    githubOwner.set("GroupeZ-dev")
 }
