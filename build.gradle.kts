@@ -30,9 +30,14 @@ allprojects {
         maven(url = "https://repo.extendedclip.com/content/repositories/placeholderapi/")
         maven(url = "https://repo.bg-software.com/repository/api/")
         maven(url = "https://libraries.minecraft.net/")
-        maven(url = "https://repo.kryptonmc.org/releases")
+        maven(url = "https://repo.tcoded.com/releases")
+        // maven(url = "https://repo.kryptonmc.org/releases")
         maven(url = "https://repo.william278.net/releases")
         maven(url = "https://repo.codemc.org/repository/maven-public")
+        maven {
+            name = "groupezReleases"
+            url = uri("https://repo.groupez.dev/releases")
+        }
     }
 
     tasks.compileJava {
@@ -65,9 +70,9 @@ allprojects {
         compileOnly(files("libs/GangsPlus-2.6.4.jar"))
 
         implementation("com.github.cryptomorin:XSeries:9.4.0")
-        implementation("fr.mrmicky:fastboard:2.1.3")
-        implementation("com.github.technicallycoded:FoliaLib:main-SNAPSHOT")
-        implementation("com.github.Maxlego08:Sarah:1.17")
+        implementation("fr.mrmicky:fastboard:2.1.5")
+        implementation("com.tcoded:FoliaLib:0.5.1")
+        implementation("fr.maxlego08.sarah:sarah:1.18")
     }
 
 }
