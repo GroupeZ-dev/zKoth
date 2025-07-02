@@ -1,9 +1,15 @@
-name: Gradle Package
+name: Build Action
 
 on:
   push:
-    branches: [ feature/update-to-new-zmenu-api ]
+    branches: [ main, develop ]
+  pull_request:
+    types: [ opened, synchronize, reopened ]
   workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -11,51 +17,14 @@ concurrency:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up JDK 21
-        uses: actions/setup-java@v4
-        with:
-          java-version: '21'
-          distribution: 'temurin'
-          server-id: github
-          settings-path: ${{ github.workspace }}
-
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
-
-      - name: Make the short sha
-        id: short_sha
-        run: |
-          echo "GITHUB_SHA_SHORT=$(echo $GITHUB_SHA | cut -c1-7)" >> $GITHUB_OUTPUT
-
-      - name: Build with Gradle
-        run: ./gradlew build -Darchive.classifier=DEV -Dgithub.sha=${{ steps.short_sha.outputs.GITHUB_SHA_SHORT }}
-
-      - name: Publish on GCHR
-        run: ./gradlew API:publish -Darchive.classifier=DEV -Dgithub.sha=${{ steps.short_sha.outputs.GITHUB_SHA_SHORT }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_ACTOR: ${{ github.actor }}
-
-      - name: Find zQuests JAR
-        id: find_jar
-        run: |
-          echo "Finding zQuests JAR..."
-          jar_path=$(find target/ -name 'zQuests-*.jar' | head -n 1)
-          echo "Found zQuests JAR at: $jar_path"
-          echo "JAR_PATH=$jar_path" >> $GITHUB_OUTPUT
-
-      - name: Discord Webhook Action
-        uses: tsickert/discord-webhook@v7.0.0
-        with:
-          webhook-url: ${{ secrets.WEBHOOK_URL }}
-          content: "New development build of zQuests is available!"
-          avatar-url: https://groupez.dev/storage/images/335.png
-          username: zQuests
-          filename: ${{ steps.find_jar.outputs.jar_path }}
+    name: Build and Publish zKoth
+    uses: GroupeZ-dev/actions/.github/workflows/build.yml@main
+    with:
+      project-name: "zKoth"
+      publish: true
+      project-to-publish: "API:publish"
+      discord-avatar-url: "https://groupez.dev/storage/images/335.png"
+    secrets:
+      WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
+      MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
+      MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
