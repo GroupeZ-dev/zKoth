@@ -18,7 +18,7 @@ allprojects {
     apply(plugin = "com.gradleup.shadow")
     apply(plugin = "re.alwyn974.groupez.repository")
 
-    group = "fr.maxlego08.menu"
+    group = "fr.maxlego08.koth"
     version = rootProject.version
 
     repositories {
@@ -33,13 +33,8 @@ allprojects {
         maven(url = "https://repo.bg-software.com/repository/api/")
         maven(url = "https://libraries.minecraft.net/")
         maven(url = "https://repo.tcoded.com/releases")
-        // maven(url = "https://repo.kryptonmc.org/releases")
         maven(url = "https://repo.william278.net/releases")
         maven(url = "https://repo.codemc.org/repository/maven-public")
-        maven {
-            name = "groupezReleases"
-            url = uri("https://repo.groupez.dev/releases")
-        }
     }
 
     java {
