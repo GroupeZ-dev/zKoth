@@ -63,7 +63,7 @@ allprojects {
         compileOnly("com.mojang:authlib:3.11.50")
         compileOnly("com.github.booksaw:BetterTeams:4.8.0")
         compileOnly("com.github.MrUniverse44:ScaredClansAPI:0.3")
-        compileOnly("me.neznamy:tab-api:4.0.2")
+        compileOnly("com.github.NEZNAMY:TAB-API:5.2.3")
         compileOnly("net.william278:husktowns:3.0.4")
         compileOnly("com.github.angeschossen:LandsAPI:6.44.6")
         compileOnly("com.github.Maxlego08:zSchedulers:1.0.5")
