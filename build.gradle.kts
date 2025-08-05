@@ -35,6 +35,15 @@ allprojects {
         maven(url = "https://repo.tcoded.com/releases")
         maven(url = "https://repo.william278.net/releases")
         maven(url = "https://repo.codemc.org/repository/maven-public")
+        exclusiveContent {
+            forRepository {
+                maven("https://dependency.download/releases")
+            }
+
+            filter {
+                includeGroup("dev.kitteh")
+            }
+        }
     }
 
     java {
@@ -65,6 +74,7 @@ allprojects {
         compileOnly("com.bgsoftware:SuperiorSkyblockAPI:2022.9")
         compileOnly("net.sacredlabyrinth.phaed.simpleclans:SimpleClans:2.15.2")
         compileOnly("com.github.UlrichBR:UClansV7-API:7.13.0-R1")
+        compileOnly("dev.kitteh:factions:4.0.0-rc.1")
 
         compileOnly(files("libs/SternalBoard-2.2.8-all.jar"))
         compileOnly(files("libs/FeatherBoard.jar"))

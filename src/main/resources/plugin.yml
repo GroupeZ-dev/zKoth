@@ -17,6 +17,7 @@ softdepend:
   - SuperiorSkyblock2
   - LegacyFactions
   - UltimateFactions
+  - FactionsUUID
   - Multiverse-Core
   - SimpleClan
   - zSchedulers
