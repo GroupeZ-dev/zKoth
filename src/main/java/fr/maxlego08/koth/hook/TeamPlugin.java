@@ -3,6 +3,7 @@ package fr.maxlego08.koth.hook;
 import fr.maxlego08.koth.KothPlugin;
 import fr.maxlego08.koth.api.KothTeam;
 import fr.maxlego08.koth.hook.teams.BetterTeamHook;
+import fr.maxlego08.koth.hook.teams.FactionsUUIDHook;
 import fr.maxlego08.koth.hook.teams.GangsHook;
 import fr.maxlego08.koth.hook.teams.HuskTownHook;
 import fr.maxlego08.koth.hook.teams.LandHook;
@@ -22,6 +23,7 @@ public enum TeamPlugin {
     SUPERIORSKYBLOCK("SuperiorSkyblock2", SuperiorSkyblock2Hook.class),
     BETTERTEAMS("BetterTeams", BetterTeamHook.class),
     FACTIONS("Factions", SaberFactionHook.class),
+    FACTIONSUUID("FactionsUUID", FactionsUUIDHook.class),
     SIMPLECLANS("SimpleClans", SimpleClanHook.class),
     GANGSPLUS("GangsPlus", GangsHook.class),
     ULTIMATE_CLANS("UltimateClans", UltimateClan.class),
