@@ -5,6 +5,7 @@ import fr.maxlego08.koth.api.KothScoreboard;
 import fr.maxlego08.koth.command.commands.CommandKoth;
 import fr.maxlego08.koth.hologram.DecentHologram;
 import fr.maxlego08.koth.hologram.EmptyHologram;
+import fr.maxlego08.koth.hologram.FancyHologram;
 import fr.maxlego08.koth.hook.ScoreboardPlugin;
 import fr.maxlego08.koth.hook.scoreboard.DefaultHook;
 import fr.maxlego08.koth.placeholder.LocalPlaceholder;
@@ -74,6 +75,10 @@ public class KothPlugin extends ZPlugin {
         if (this.isEnable(Plugins.DH)) {
             Logger.info("Register DecentHologram implementation", Logger.LogType.INFO);
             this.kothHologram = new DecentHologram();
+        }
+        if (this.isEnable(Plugins.FH)) {
+            Logger.info("Register FancyHologram implementation", Logger.LogType.INFO);
+            this.kothHologram = new FancyHologram();
         }
 
         KothPlaceholder kothPlaceholder = new KothPlaceholder(this.kothManager);
