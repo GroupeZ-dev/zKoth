@@ -15,7 +15,7 @@ pluginManagement {
 
 include("API")
 
-file("Hooks").listFiles()?.forEach { file ->
+file("Hooks").listFiles()?.sortedBy { it.name }?.forEach { file ->
     if (file.isDirectory and !file.name.equals("build")) {
         println("Include Hooks:${file.name}")
         include(":Hooks:${file.name}")

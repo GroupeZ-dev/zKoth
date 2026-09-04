@@ -59,6 +59,11 @@ allprojects {
         options.release = 25
     }
 
+    tasks.withType<Jar> {
+        isPreserveFileTimestamps = false
+        isReproducibleFileOrder = true
+    }
+
     tasks.javadoc {
         options.encoding = "UTF-8"
         if (JavaVersion.current().isJava9Compatible)
@@ -89,12 +94,17 @@ dependencies {
     // Include all hooks dynamically
     file("Hooks").listFiles()?.filter {
         it.isDirectory && !it.name.equals("build")
-    }?.forEach { hookDir ->
+    }?.sortedBy { it.name }?.forEach { hookDir ->
         implementation(project(":Hooks:${hookDir.name}"))
     }
 }
 
 tasks {
+    clean {
+        delete(rootProject.extra["targetFolder"])
+        delete(rootProject.extra["apiFolder"])
+    }
+
     shadowJar {
         relocate("com.tcoded.folialib", "fr.maxlego08.koth.libs.folia")
         relocate("fr.mrmicky.fastboard", "fr.maxlego08.koth.fastboard")
