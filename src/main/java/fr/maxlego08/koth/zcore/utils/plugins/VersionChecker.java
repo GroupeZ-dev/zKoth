@@ -2,6 +2,7 @@ package fr.maxlego08.koth.zcore.utils.plugins;
 
 import java.io.IOException;
 import java.net.URL;
+import java.net.URI;
 import java.net.URLConnection;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -50,7 +51,7 @@ public class VersionChecker implements Listener {
 		Bukkit.getPluginManager().registerEvents(this, this.plugin); // Register
 																		// event
 
-		String pluginVersion = plugin.getDescription().getVersion();
+		String pluginVersion = plugin.getPluginMeta().getVersion();
 		AtomicBoolean atomicBoolean = new AtomicBoolean();
 		this.getVersion(version -> {
 
@@ -94,7 +95,7 @@ public class VersionChecker implements Listener {
 		Bukkit.getScheduler().runTaskAsynchronously(this.plugin, () -> {
 			final String apiURL = String.format(URL_API, this.pluginID);
 			try {
-				URL url = new URL(apiURL);
+				URL url = URI.create(apiURL).toURL();
 				URLConnection hc = url.openConnection();
 				hc.setRequestProperty("User-Agent",
 						"Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.4; en-US; rv:1.9.2.2) Gecko/20100316 Firefox/3.6.2");

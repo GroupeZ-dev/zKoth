@@ -210,7 +210,20 @@ public class DiscordWebhook {
             this.image = configuration.getString(path + "image", null);
             this.author = new Author(configuration, path);
             List<?> list = configuration.getList(path + "fields", new ArrayList<>());
-            this.fields = ((List<Map<String, Object>>) list).stream().map(Field::new).collect(Collectors.toList());
+            this.fields = list.stream()
+                    .filter(Map.class::isInstance)
+                    .map(EmbedObject::stringKeyedMap)
+                    .map(Field::new)
+                    .collect(Collectors.toList());
+        }
+
+        private static Map<String, Object> stringKeyedMap(Object value) {
+            Map<String, Object> result = new HashMap<>();
+            Map<?, ?> map = (Map<?, ?>) value;
+            for (Map.Entry<?, ?> entry : map.entrySet()) {
+                if (entry.getKey() instanceof String key) result.put(key, entry.getValue());
+            }
+            return result;
         }
 
         public KothEvent getEvent() {

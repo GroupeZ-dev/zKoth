@@ -7,6 +7,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import fr.maxlego08.koth.placeholder.Placeholder;
+import net.kyori.adventure.text.Component;
 
 public class PapiUtils extends TranslationHelper {
 
@@ -25,11 +26,17 @@ public class PapiUtils extends TranslationHelper {
 		ItemMeta itemMeta = itemStack.getItemMeta();
 
 		if (itemMeta.hasDisplayName()) {
-			itemMeta.setDisplayName(Placeholder.getPlaceholder().setPlaceholders(player, itemMeta.getDisplayName()));
+			String displayName = LegacyText.serialize(itemMeta.displayName());
+			itemMeta.displayName(LegacyText.component(Placeholder.getPlaceholder().setPlaceholders(player, displayName)));
 		}
 
 		if (itemMeta.hasLore()) {
-			itemMeta.setLore(Placeholder.getPlaceholder().setPlaceholders(player, itemMeta.getLore()));
+			List<Component> lore = itemMeta.lore();
+			if (lore != null) {
+				List<String> legacyLore = lore.stream().map(LegacyText::serialize).toList();
+				itemMeta.lore(Placeholder.getPlaceholder().setPlaceholders(player, legacyLore).stream()
+						.map(LegacyText::component).toList());
+			}
 		}
 
 		itemStack.setItemMeta(itemMeta);

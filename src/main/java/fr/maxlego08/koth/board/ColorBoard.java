@@ -1,7 +1,7 @@
 package fr.maxlego08.koth.board;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
@@ -15,10 +15,10 @@ public class ColorBoard implements Board {
 
         Scoreboard board = Bukkit.getScoreboardManager().getMainScoreboard();
         this.greenTeam = board.getTeams().stream().filter(e -> e.getName().equals("zkothgreenteam")).findFirst().orElseGet(() -> board.registerNewTeam("zkothgreenteam"));
-        this.greenTeam.setColor(ChatColor.GREEN);
+        this.greenTeam.color(NamedTextColor.GREEN);
 
         this.redTeam = board.getTeams().stream().filter(e -> e.getName().equals("zkothredteam")).findFirst().orElseGet(() -> board.registerNewTeam("zkothredteam"));
-        this.redTeam.setColor(ChatColor.RED);
+        this.redTeam.color(NamedTextColor.RED);
 
     }
 

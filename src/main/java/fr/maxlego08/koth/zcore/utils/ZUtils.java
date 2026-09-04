@@ -1,8 +1,6 @@
 package fr.maxlego08.koth.zcore.utils;
 
 import com.google.common.base.Strings;
-import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
 import fr.maxlego08.koth.KothPlugin;
 import fr.maxlego08.koth.api.utils.ProgressBar;
 import fr.maxlego08.koth.zcore.enums.EnumInventory;
@@ -11,19 +9,17 @@ import fr.maxlego08.koth.zcore.enums.Permission;
 import fr.maxlego08.koth.zcore.utils.builder.CooldownBuilder;
 import fr.maxlego08.koth.zcore.utils.builder.TimerBuilder;
 import fr.maxlego08.koth.zcore.utils.nms.ItemStackUtils;
-import fr.maxlego08.koth.zcore.utils.nms.NmsVersion;
 import fr.maxlego08.koth.zcore.utils.players.ActionBar;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.HoverEvent.Action;
-import net.md_5.bungee.api.chat.TextComponent;
+import com.destroystokyo.paper.profile.PlayerProfile;
+import com.destroystokyo.paper.profile.ProfileProperty;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.OfflinePlayer;
+import io.papermc.paper.registry.RegistryAccess;
+import io.papermc.paper.registry.RegistryKey;
 import org.bukkit.block.BlockFace;
 import org.bukkit.command.Command;
 import org.bukkit.command.PluginCommand;
@@ -46,7 +42,6 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -62,32 +57,13 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@SuppressWarnings("deprecation")
 public abstract class ZUtils extends MessageUtils {
 
     private static final List<String> teleportPlayers = new ArrayList<String>();
-    // For plugin support from 1.8 to 1.12
-    private static Material[] byId;
-
-    static {
-        if (!NmsVersion.nmsVersion.isNewMaterial()) {
-            byId = new Material[0];
-            for (Material material : Material.values()) {
-                if (byId.length > material.getId()) {
-                    byId[material.getId()] = material;
-                } else {
-                    byId = Arrays.copyOfRange(byId, 0, material.getId() + 2);
-                    byId[material.getId()] = material;
-                }
-            }
-        }
-    }
-
     /**
      * Allows to encode an itemstack in base64
      *
@@ -148,17 +124,6 @@ public abstract class ZUtils extends MessageUtils {
     }
 
     /**
-     * Allows to return a material according to its ID Works only for plugins
-     * from 1.8 to 1.12
-     *
-     * @param id
-     * @return the material according to his id
-     */
-    protected Material getMaterial(int id) {
-        return byId.length > id && id >= 0 ? byId[id] : Material.AIR;
-    }
-
-    /**
      * Allows to check if an itemstack has a display name
      *
      * @return boolean
@@ -168,11 +133,11 @@ public abstract class ZUtils extends MessageUtils {
     }
 
     protected boolean same(ItemStack itemStack, String name) {
-        return this.hasDisplayName(itemStack) && itemStack.getItemMeta().getDisplayName().equals(name);
+        return this.hasDisplayName(itemStack) && LegacyText.serialize(itemStack.getItemMeta().displayName()).equals(name);
     }
 
     protected boolean contains(ItemStack itemStack, String name) {
-        return this.hasDisplayName(itemStack) && itemStack.getItemMeta().getDisplayName().contains(name);
+        return this.hasDisplayName(itemStack) && LegacyText.serialize(itemStack.getItemMeta().displayName()).contains(name);
     }
 
     protected void removeItemInHand(Player player) {
@@ -180,9 +145,9 @@ public abstract class ZUtils extends MessageUtils {
     }
 
     protected void removeItemInHand(Player player, int how) {
-        if (player.getItemInHand().getAmount() > how)
-            player.getItemInHand().setAmount(player.getItemInHand().getAmount() - how);
-        else player.setItemInHand(new ItemStack(Material.AIR));
+        ItemStack itemStack = player.getInventory().getItemInMainHand();
+        if (itemStack.getAmount() > how) itemStack.setAmount(itemStack.getAmount() - how);
+        else player.getInventory().setItemInMainHand(ItemStack.empty());
         player.updateInventory();
     }
 
@@ -465,19 +430,7 @@ public abstract class ZUtils extends MessageUtils {
      */
     protected String color(String message) {
         if (message == null) return null;
-
-        message = ColorTransformer.transformColors(message);
-
-        if (NmsVersion.nmsVersion.isHexVersion()) {
-            Pattern pattern = Pattern.compile("#[a-fA-F0-9]{6}");
-            Matcher matcher = pattern.matcher(message);
-            while (matcher.find()) {
-                String color = message.substring(matcher.start(), matcher.end());
-                message = message.replace(color, String.valueOf(net.md_5.bungee.api.ChatColor.of(color)));
-                matcher = pattern.matcher(message);
-            }
-        }
-        return net.md_5.bungee.api.ChatColor.translateAlternateColorCodes('&', message);
+        return LegacyText.colorize(ColorTransformer.transformColors(message));
     }
 
     /**
@@ -485,19 +438,7 @@ public abstract class ZUtils extends MessageUtils {
      * @return
      */
     protected String colorReverse(String message) {
-        if (message == null) return null;
-
-        Pattern pattern = Pattern.compile(net.md_5.bungee.api.ChatColor.COLOR_CHAR + "x[a-fA-F0-9-" + net.md_5.bungee.api.ChatColor.COLOR_CHAR + "]{12}");
-        Matcher matcher = pattern.matcher(message);
-        while (matcher.find()) {
-            String color = message.substring(matcher.start(), matcher.end());
-            String colorReplace = color.replace("§x", "#");
-            colorReplace = colorReplace.replace("§", "");
-            message = message.replace(color, colorReplace);
-            matcher = pattern.matcher(message);
-        }
-
-        return message.replace("§", "&");
+        return LegacyText.reverseColors(message);
     }
 
     /**
@@ -558,41 +499,6 @@ public abstract class ZUtils extends MessageUtils {
     }
 
     /**
-     * @param message
-     * @return
-     */
-    protected TextComponent buildTextComponent(String message) {
-        return new TextComponent(message);
-    }
-
-    protected TextComponent setHoverMessage(TextComponent component, String... messages) {
-        BaseComponent[] list = new BaseComponent[messages.length];
-        for (int a = 0; a != messages.length; a++)
-            list[a] = new TextComponent(messages[a] + (messages.length - 1 == a ? "" : "\n"));
-        component.setHoverEvent(new HoverEvent(Action.SHOW_TEXT, list));
-        return component;
-    }
-
-    protected TextComponent setHoverMessage(TextComponent component, List<String> messages) {
-        BaseComponent[] list = new BaseComponent[messages.size()];
-        for (int a = 0; a != messages.size(); a++)
-            list[a] = new TextComponent(messages.get(a) + (messages.size() - 1 == a ? "" : "\n"));
-        component.setHoverEvent(new HoverEvent(Action.SHOW_TEXT, list));
-        return component;
-    }
-
-    /**
-     * @param component
-     * @param action
-     * @param command
-     * @return
-     */
-    protected TextComponent setClickAction(TextComponent component, net.md_5.bungee.api.chat.ClickEvent.Action action, String command) {
-        component.setClickEvent(new ClickEvent(action, command));
-        return component;
-    }
-
-    /**
      * @param value
      * @return
      */
@@ -633,9 +539,8 @@ public abstract class ZUtils extends MessageUtils {
     }
 
     protected Enchantment enchantFromString(String str) {
-        for (Enchantment enchantment : Enchantment.values())
-            if (enchantment.getName().equalsIgnoreCase(str)) return enchantment;
-        return null;
+        NamespacedKey key = NamespacedKey.fromString(str.toLowerCase(Locale.ROOT));
+        return key == null ? null : RegistryAccess.registryAccess().getRegistry(RegistryKey.ENCHANTMENT).get(key);
     }
 
     /**
@@ -774,9 +679,7 @@ public abstract class ZUtils extends MessageUtils {
      * @return
      */
     protected String removeColor(String message) {
-        for (ChatColor color : ChatColor.values())
-            message = message.replace("§" + color.getChar(), "").replace("&" + color.getChar(), "");
-        return message;
+        return LegacyText.stripColors(message);
     }
 
     /**
@@ -809,25 +712,14 @@ public abstract class ZUtils extends MessageUtils {
      * @return itemstack
      */
     public ItemStack playerHead(ItemStack itemStack, OfflinePlayer player) {
-        String name = itemStack.hasItemMeta() && itemStack.getItemMeta().hasDisplayName() ? itemStack.getItemMeta().getDisplayName() : null;
-        if (NmsVersion.nmsVersion.isNewMaterial()) {
-            if (itemStack.getType().equals(Material.PLAYER_HEAD) && name != null && name.startsWith("HEAD")) {
-                SkullMeta meta = (SkullMeta) itemStack.getItemMeta();
-                name = name.replace("HEAD", "");
-                if (name.length() == 0) meta.setDisplayName(null);
-                else meta.setDisplayName(name);
-                meta.setOwningPlayer(player);
-                itemStack.setItemMeta(meta);
-            }
-        } else {
-            if (itemStack.getType().equals(getMaterial(397)) && itemStack.getData().getData() == 3 && name != null && name.startsWith("HEAD")) {
-                SkullMeta meta = (SkullMeta) itemStack.getItemMeta();
-                name = name.replace("HEAD", "");
-                if (name.length() == 0) meta.setDisplayName(null);
-                else meta.setDisplayName(name);
-                meta.setOwner(player.getName());
-                itemStack.setItemMeta(meta);
-            }
+        String name = itemStack.hasItemMeta() && itemStack.getItemMeta().hasDisplayName()
+                ? LegacyText.serialize(itemStack.getItemMeta().displayName()) : null;
+        if (itemStack.getType() == Material.PLAYER_HEAD && name != null && name.startsWith("HEAD")) {
+            SkullMeta meta = (SkullMeta) itemStack.getItemMeta();
+            name = name.substring("HEAD".length());
+            meta.displayName(name.isEmpty() ? null : LegacyText.component(name));
+            meta.setOwningPlayer(player);
+            itemStack.setItemMeta(meta);
         }
         return itemStack;
     }
@@ -838,7 +730,7 @@ public abstract class ZUtils extends MessageUtils {
      * @return itemstack
      */
     protected ItemStack playerHead() {
-        return NmsVersion.nmsVersion.isNewMaterial() ? new ItemStack(Material.PLAYER_HEAD) : new ItemStack(getMaterial(397), 1, (byte) 3);
+        return ItemStack.of(Material.PLAYER_HEAD);
     }
 
     /**
@@ -859,12 +751,8 @@ public abstract class ZUtils extends MessageUtils {
      * @return
      */
     protected PotionEffectType getPotion(String configuration) {
-        for (PotionEffectType effectType : PotionEffectType.values()) {
-            if (effectType.getName().equalsIgnoreCase(configuration)) {
-                return effectType;
-            }
-        }
-        return null;
+        NamespacedKey key = NamespacedKey.fromString(configuration.toLowerCase(Locale.ROOT));
+        return key == null ? null : RegistryAccess.registryAccess().getRegistry(RegistryKey.MOB_EFFECT).get(key);
     }
 
     /**
@@ -898,18 +786,9 @@ public abstract class ZUtils extends MessageUtils {
         if (url.isEmpty()) return head;
 
         SkullMeta headMeta = (SkullMeta) head.getItemMeta();
-        GameProfile profile = new GameProfile(UUID.randomUUID(), "random_name");
-
-        profile.getProperties().put("textures", new Property("textures", url));
-
-        try {
-            Field profileField = headMeta.getClass().getDeclaredField("profile");
-            profileField.setAccessible(true);
-            profileField.set(headMeta, profile);
-
-        } catch (IllegalArgumentException | NoSuchFieldException | SecurityException | IllegalAccessException error) {
-            error.printStackTrace();
-        }
+        PlayerProfile profile = Bukkit.createProfile(UUID.randomUUID(), "random_name");
+        profile.setProperty(new ProfileProperty("textures", url));
+        headMeta.setPlayerProfile(profile);
         head.setItemMeta(headMeta);
         return head;
     }
@@ -921,9 +800,7 @@ public abstract class ZUtils extends MessageUtils {
      * @return boolean
      */
     protected boolean isPlayerHead(ItemStack itemStack) {
-        Material material = itemStack.getType();
-        if (NmsVersion.nmsVersion.isNewMaterial()) return material.equals(Material.PLAYER_HEAD);
-        return (material.equals(getMaterial(397))) && (itemStack.getDurability() == 3);
+        return itemStack.getType() == Material.PLAYER_HEAD;
     }
 
     /**
@@ -937,7 +814,15 @@ public abstract class ZUtils extends MessageUtils {
      */
     protected Object getPrivateField(Object object, String field) throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
         Class<?> clazz = object.getClass();
-        Field objectField = field.equals("commandMap") ? clazz.getDeclaredField(field) : field.equals("knownCommands") ? NmsVersion.nmsVersion.isNewMaterial() ? clazz.getSuperclass().getDeclaredField(field) : clazz.getDeclaredField(field) : null;
+        Field objectField = null;
+        while (clazz != null && objectField == null) {
+            try {
+                objectField = clazz.getDeclaredField(field);
+            } catch (NoSuchFieldException ignored) {
+                clazz = clazz.getSuperclass();
+            }
+        }
+        if (objectField == null) throw new NoSuchFieldException(field);
         objectField.setAccessible(true);
         Object result = objectField.get(object);
         objectField.setAccessible(false);

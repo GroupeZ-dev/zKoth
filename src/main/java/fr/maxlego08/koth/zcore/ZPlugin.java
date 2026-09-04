@@ -38,7 +38,7 @@ import java.util.concurrent.Executors;
 public abstract class ZPlugin extends JavaPlugin {
 
     public static final ExecutorService service = Executors.newFixedThreadPool(5);
-    private final Logger log = new Logger(this.getDescription().getFullName());
+    private final Logger log = new Logger(this.getName() + " v" + this.getPluginMeta().getVersion());
     private final List<Savable> savers = new ArrayList<>();
     private final List<ListenerAdapter> listenerAdapters = new ArrayList<>();
 
@@ -57,7 +57,7 @@ public abstract class ZPlugin extends JavaPlugin {
         this.enableTime = System.currentTimeMillis();
 
         this.log.log("=== ENABLE START ===");
-        this.log.log("Plugin Version V<&>c" + getDescription().getVersion(), Logger.LogType.INFO);
+        this.log.log("Plugin Version V<&>c" + getPluginMeta().getVersion(), Logger.LogType.INFO);
 
         this.getDataFolder().mkdirs();
 

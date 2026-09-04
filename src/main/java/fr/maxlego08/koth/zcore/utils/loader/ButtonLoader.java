@@ -7,9 +7,7 @@ import fr.maxlego08.koth.zcore.utils.ZUtils;
 import fr.maxlego08.koth.zcore.utils.inventory.Button;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.material.MaterialData;
 
-@SuppressWarnings("deprecation")
 public class ButtonLoader extends ZUtils implements Loader<Button> {
 
 	@Override
@@ -31,9 +29,8 @@ public class ButtonLoader extends ZUtils implements Loader<Button> {
 		configuration.set(path + "name", object.getName() != null ? colorReverse(object.getName()) : null);
 		configuration.set(path + "slot", object.getSlot());
 		configuration.set(path + "lore", object.getLore() == null ? null : object.getLore());
-		MaterialData materialData = object.getItem();
-		configuration.set(path + "material", materialData == null ? null : materialData.getItemType());
-		configuration.set(path + "data", materialData == null ? null : materialData.getData());
+		configuration.set(path + "material", object.getItem());
+		configuration.set(path + "data", object.getData());
 
 	}
 

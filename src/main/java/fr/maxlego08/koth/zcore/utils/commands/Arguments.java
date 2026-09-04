@@ -8,7 +8,6 @@ import org.bukkit.World;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
-@SuppressWarnings("deprecation")
 public abstract class Arguments extends ZUtils {
 
 	protected String[] args;

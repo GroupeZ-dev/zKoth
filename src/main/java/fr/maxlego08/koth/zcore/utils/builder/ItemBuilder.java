@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 import fr.maxlego08.koth.zcore.utils.ZUtils;
+import fr.maxlego08.koth.zcore.utils.LegacyText;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -14,6 +16,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.inventory.meta.Damageable;
 
 /**
  * 
@@ -206,21 +209,18 @@ public class ItemBuilder extends ZUtils implements Cloneable {
 		return owner(name.getName());
 	}
 
-	@SuppressWarnings("deprecation")
 	public ItemBuilder owner(String name) {
-		if ((material == getMaterial(144)) || (material == getMaterial(397))) {
+		if (material == Material.PLAYER_HEAD) {
+			if (meta == null) meta = ItemStack.of(material).getItemMeta();
 			SkullMeta smeta = (SkullMeta) meta;
-			smeta.setOwner(name);
-			if (meta == null)
-				build();
+			smeta.setOwningPlayer(Bukkit.getOfflinePlayer(name));
 			meta = smeta;
 		}
 		return this;
 	}
 
-	@SuppressWarnings("deprecation")
 	public ItemStack build() {
-		item = new ItemStack(material, amount, (short) data);
+		item = ItemStack.of(material, amount);
 
 		if (meta == null)
 			meta = item.getItemMeta();
@@ -229,16 +229,16 @@ public class ItemBuilder extends ZUtils implements Cloneable {
 			flags.forEach(flag -> meta.addItemFlags(flag));
 
 		if (name != null)
-			meta.setDisplayName(name);
+			meta.displayName(LegacyText.component(name));
 
 		if (lore != null)
-			meta.setLore(lore);
+			meta.lore(lore.stream().map(LegacyText::component).toList());
 
 		if (enchantments != null)
 			enchantments.forEach((e, l) -> meta.addEnchant(e, l, true));
 
-		if (durability != 0)
-			item.setDurability((short) durability);
+		if (durability != 0 && meta instanceof Damageable damageable)
+			damageable.setDamage(durability);
 
 		item.setItemMeta(meta);
 		return item;
@@ -273,10 +273,9 @@ public class ItemBuilder extends ZUtils implements Cloneable {
 	/**
 	 * @return the meta
 	 */
-	@SuppressWarnings("deprecation")
 	public ItemMeta getMeta() {
 		if (meta == null)
-			meta = new ItemStack(material, amount, (short) data).getItemMeta();
+			meta = ItemStack.of(material, amount).getItemMeta();
 		return meta;
 	}
 

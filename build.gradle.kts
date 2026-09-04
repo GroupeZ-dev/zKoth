@@ -11,6 +11,8 @@ extra.set("targetFolder", file("target/"))
 extra.set("apiFolder", file("target-api/"))
 extra.set("classifier", System.getProperty("archive.classifier"))
 extra.set("sha", System.getProperty("github.sha"))
+val legacyResources = layout.projectDirectory.dir("resources")
+val pluginVersion = version.toString()
 
 allprojects {
 
@@ -57,6 +59,7 @@ allprojects {
     tasks.compileJava {
         options.encoding = "UTF-8"
         options.release = 25
+        options.compilerArgs.addAll(listOf("-Xlint:deprecation", "-Xlint:removal", "-Xlint:unchecked", "-Werror"))
     }
 
     tasks.javadoc {
@@ -66,8 +69,11 @@ allprojects {
     }
 
     dependencies {
-        compileOnly("io.papermc.paper:paper-api:26.2.build.62-beta")
-        compileOnly("com.mojang:authlib:3.11.50")
+        compileOnly("io.papermc.paper:paper-api:26.2.build.112-stable")
+
+        testImplementation("io.papermc.paper:paper-api:26.2.build.112-stable")
+        testImplementation("org.junit.jupiter:junit-jupiter:5.13.4")
+        testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.13.4")
 
         implementation("com.github.cryptomorin:XSeries:13.7.1")
         implementation("fr.mrmicky:fastboard:2.2.0")
@@ -79,6 +85,10 @@ allprojects {
         archiveBaseName.set("zKoth")
         archiveAppendix.set(if (project.path == ":") "" else project.name)
         archiveClassifier.set("")
+    }
+
+    tasks.test {
+        useJUnitPlatform()
     }
 
 }
@@ -116,9 +126,9 @@ tasks {
     }
 
     processResources {
-        from("resources")
+        from(legacyResources)
         filesMatching("plugin.yml") {
-            expand("version" to project.version)
+            expand("version" to pluginVersion)
         }
     }
 }
