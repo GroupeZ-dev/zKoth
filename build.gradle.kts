@@ -1,11 +1,11 @@
 plugins {
     `java-library`
-    id("com.gradleup.shadow") version "9.0.0-beta11"
+    id("com.gradleup.shadow") version "9.6.0"
     id("re.alwyn974.groupez.repository") version "1.0.0"
 }
 
 group = "fr.maxlego08.koth"
-version = "3.2.1"
+version = "3.2.2"
 
 extra.set("targetFolder", file("target/"))
 extra.set("apiFolder", file("target-api/"))
@@ -35,6 +35,10 @@ allprojects {
         maven(url = "https://repo.tcoded.com/releases")
         maven(url = "https://repo.william278.net/releases")
         maven(url = "https://repo.codemc.org/repository/maven-public")
+        maven {
+            name = "faststatsReleases"
+            url = uri("https://repo.faststats.dev/releases")
+        }
         exclusiveContent {
             forRepository {
                 maven("https://dependency.download/releases")
@@ -47,13 +51,16 @@ allprojects {
     }
 
     java {
+        toolchain {
+            languageVersion.set(JavaLanguageVersion.of(25))
+        }
         withSourcesJar()
         withJavadocJar()
     }
 
     tasks.compileJava {
         options.encoding = "UTF-8"
-        options.release = 21
+        options.release = 25
     }
 
     tasks.javadoc {
@@ -63,13 +70,13 @@ allprojects {
     }
 
     dependencies {
-        compileOnly("io.papermc.paper:paper-api:1.21.3-R0.1-SNAPSHOT")
+        compileOnly("io.papermc.paper:paper-api:26.2.build.62-beta")
         compileOnly("com.mojang:authlib:3.11.50")
 
-        implementation("com.github.cryptomorin:XSeries:9.4.0")
-        implementation("fr.mrmicky:fastboard:2.1.5")
+        implementation("com.github.cryptomorin:XSeries:13.7.1")
+        implementation("fr.mrmicky:fastboard:2.2.0")
         implementation("com.tcoded:FoliaLib:0.5.1")
-        implementation("fr.maxlego08.sarah:sarah:1.18")
+        implementation("fr.maxlego08.sarah:sarah:1.23")
     }
 
     tasks.shadowJar {
@@ -82,6 +89,7 @@ allprojects {
 
 dependencies {
     api(projects.api)
+    implementation("dev.faststats.metrics:bukkit:0.30.2")
 
     // Include all hooks dynamically
     file("Hooks").listFiles()?.filter {
@@ -95,6 +103,7 @@ tasks {
     shadowJar {
         relocate("com.tcoded.folialib", "fr.maxlego08.koth.libs.folia")
         relocate("fr.mrmicky.fastboard", "fr.maxlego08.koth.fastboard")
+        relocate("dev.faststats", "fr.maxlego08.koth.libs.faststats")
 
         rootProject.extra.properties["sha"]?.let { sha ->
             archiveClassifier.set("${rootProject.extra.properties["classifier"]}-${sha}")
@@ -109,7 +118,7 @@ tasks {
     }
 
     compileJava {
-        options.release = 21
+        options.release = 25
     }
 
     processResources {

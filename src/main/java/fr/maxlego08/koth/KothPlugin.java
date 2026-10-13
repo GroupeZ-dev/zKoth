@@ -15,6 +15,8 @@ import fr.maxlego08.koth.storage.StorageManager;
 import fr.maxlego08.koth.zcore.ZPlugin;
 import fr.maxlego08.koth.zcore.logger.Logger;
 import fr.maxlego08.koth.zcore.utils.plugins.Plugins;
+import dev.faststats.Metrics;
+import dev.faststats.bukkit.BukkitContext;
 
 import java.util.List;
 import java.util.Optional;
@@ -32,6 +34,9 @@ public class KothPlugin extends ZPlugin implements fr.maxlego08.koth.api.KothPlu
     private StorageManager storageManager;
     private KothScoreboard kothScoreboard = new DefaultHook();
     private KothHologram kothHologram = new EmptyHologram();
+    private final BukkitContext context = new BukkitContext.Factory(this, "63d50ebba8e966319012d0b33bf74df3")
+            .metrics(Metrics.Factory::create)
+            .create();
 
     @Override
     public void onEnable() {
@@ -101,6 +106,8 @@ public class KothPlugin extends ZPlugin implements fr.maxlego08.koth.api.KothPlu
         KothPlaceholder kothPlaceholder = new KothPlaceholder(this.kothManager);
         kothPlaceholder.register();
 
+        this.context.ready();
+
         this.postEnable();
     }
 
@@ -112,6 +119,8 @@ public class KothPlugin extends ZPlugin implements fr.maxlego08.koth.api.KothPlu
         this.kothHologram.onDisable();
         this.scoreBoardManager.setRunning(false);
         this.saveFiles();
+
+        this.context.shutdown();
 
         this.postDisable();
     }

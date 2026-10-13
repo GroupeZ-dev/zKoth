@@ -130,6 +130,16 @@ enableCapturePermission: false
 # Permission required to capture a KOTH (only used if enableCapturePermission is true)
 capturePermission: "zkoth.capture"
 
+# When the capturing player leaves the zone, dies or disconnects, a teammate already inside
+# the zone takes over the capture without resetting the timer.
+teamCaptureTransfer:
+  enable: true
+  # Team IDs that never count as a real team (Wilderness, SafeZone and WarZone for Factions plugins)
+  ignoredTeamIds:
+    - "0"
+    - "-1"
+    - "-2"
+
 scoreboardRadius: 50
 
 # Value that will be used for score placeholders if the position does not exist.
