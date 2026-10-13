@@ -479,6 +479,9 @@ public class ZKoth extends ZUtils implements Koth {
 
         } else if (this.currentPlayer != null && shouldLoseCapture(cuboid)) {
 
+            // Un coéquipier présent dans la zone reprend la capture sans remettre le timer à zéro
+            if (this.transferCapture(cuboid)) return;
+
             KothLooseEvent event = new KothLooseEvent(this.currentPlayer, this);
             event.call();
 
@@ -503,15 +506,44 @@ public class ZKoth extends ZUtils implements Koth {
 
     private boolean shouldLoseCapture(Cuboid cuboid) {
         if (this.currentPlayer == null) return false;
+        return !this.canCapture(this.currentPlayer, cuboid);
+    }
+
+    private boolean canCapture(Player player, Cuboid cuboid) {
+
+        if (!player.isValid() || !player.isOnline()) return false;
 
         // Player left the zone
-        if (!cuboid.contains(this.currentPlayer.getLocation())) return true;
+        if (player.getWorld() != cuboid.getWorld() || !cuboid.contains(player.getLocation())) return false;
 
         // Player switched to spectator mode
-        if (this.currentPlayer.getGameMode() == GameMode.SPECTATOR) return true;
+        if (player.getGameMode() == GameMode.SPECTATOR) return false;
 
         // Player lost capture permission
-        if (Config.enableCapturePermission && !this.currentPlayer.hasPermission(Config.capturePermission)) return true;
+        return !Config.enableCapturePermission || player.hasPermission(Config.capturePermission);
+    }
+
+    /**
+     * Passe la capture à un coéquipier présent dans la zone.
+     *
+     * @return true si la capture a été transférée
+     */
+    private boolean transferCapture(Cuboid cuboid) {
+
+        if (!Config.enableTeamCaptureTransfer || this.kothTeam == null || this.currentPlayer == null) return false;
+
+        String teamId = this.kothTeam.getTeamId(this.currentPlayer);
+        if (teamId == null || Config.teamCaptureTransferIgnoredIds.contains(teamId) || this.blacklistTeamId.contains(teamId))
+            return false;
+
+        for (Player player : cuboid.getWorld().getPlayers()) {
+            if (player == this.currentPlayer || !this.canCapture(player, cuboid)) continue;
+            if (!teamId.equals(this.kothTeam.getTeamId(player))) continue;
+
+            this.currentPlayer = player;
+            updateDisplay();
+            return true;
+        }
 
         return false;
     }
@@ -563,11 +595,9 @@ public class ZKoth extends ZUtils implements Koth {
 
             int currentRemainingSeconds = this.remainingSeconds.get();
 
-            if (this.currentPlayer != null) {
-                if (!this.currentPlayer.isValid() || !this.currentPlayer.isOnline() || !cuboid.contains(this.currentPlayer.getLocation())) {
-                    this.currentPlayer = null;
-                    updateDisplay();
-                }
+            if (this.currentPlayer != null && !this.canCapture(this.currentPlayer, cuboid) && !this.transferCapture(cuboid)) {
+                this.currentPlayer = null;
+                updateDisplay();
             }
 
             if (this.currentPlayer == null) {
@@ -600,11 +630,11 @@ public class ZKoth extends ZUtils implements Koth {
 
             if (this.hasWin()) {
 
-                this.endKoth(task, cuboid, player);
+                this.endKoth(task, cuboid, this.currentPlayer);
 
             } else {
 
-                KothCapEvent capEvent = new KothCapEvent(this, player, this.remainingSeconds.get(), this.kothTeam.getTeamName(player));
+                KothCapEvent capEvent = new KothCapEvent(this, this.currentPlayer, this.remainingSeconds.get(), this.kothTeam.getTeamName(this.currentPlayer));
                 capEvent.call();
 
                 if (this.enableEverySecondsCapMessage) {

@@ -21,6 +21,8 @@ public class Config {
 	public static int removeChestSec = 120;
 	public static boolean enableCapturePermission = false;
 	public static String capturePermission = "zkoth.capture";
+	public static boolean enableTeamCaptureTransfer = true;
+	public static List<String> teamCaptureTransferIgnoredIds = Arrays.asList("0", "-1", "-2");
 
 	public static PlayerResult defaultPlayerResult = new PlayerResult("X", 0, "X", "X", "X");
 
@@ -68,6 +70,10 @@ public class Config {
 		removeChestSec = configuration.getInt("removeChestSec", 120);
 		enableCapturePermission = configuration.getBoolean("enableCapturePermission", false);
 		capturePermission = configuration.getString("capturePermission", "zkoth.capture");
+		enableTeamCaptureTransfer = configuration.getBoolean("teamCaptureTransfer.enable", true);
+		teamCaptureTransferIgnoredIds = configuration.contains("teamCaptureTransfer.ignoredTeamIds")
+				? configuration.getStringList("teamCaptureTransfer.ignoredTeamIds")
+				: Arrays.asList("0", "-1", "-2");
 
 		defaultPlayerResult = new PlayerResult(
 				configuration.getString("defaultPlayerResult.playerName", "X"),

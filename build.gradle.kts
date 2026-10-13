@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "fr.maxlego08.koth"
-version = "3.2.1"
+version = "3.2.2"
 
 extra.set("targetFolder", file("target/"))
 extra.set("apiFolder", file("target-api/"))
