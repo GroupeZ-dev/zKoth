@@ -5,6 +5,7 @@
 - Added team capture transfer: when the capturing player leaves the zone, dies or disconnects, a teammate already inside the zone takes over the capture without resetting the timer (``teamCaptureTransfer`` in ``config.yml``)
 - The capture timer now also checks spectator mode and the capture permission, like player movement already did
 - Fixed win commands, rewards and ``KothCapEvent`` using the first capturer instead of the current one
+- Added FastStats metrics
 
 # 3.2.1
 

@@ -35,6 +35,10 @@ allprojects {
         maven(url = "https://repo.tcoded.com/releases")
         maven(url = "https://repo.william278.net/releases")
         maven(url = "https://repo.codemc.org/repository/maven-public")
+        maven {
+            name = "faststatsReleases"
+            url = uri("https://repo.faststats.dev/releases")
+        }
         exclusiveContent {
             forRepository {
                 maven("https://dependency.download/releases")
@@ -85,6 +89,7 @@ allprojects {
 
 dependencies {
     api(projects.api)
+    implementation("dev.faststats.metrics:bukkit:0.30.2")
 
     // Include all hooks dynamically
     file("Hooks").listFiles()?.filter {
@@ -98,6 +103,7 @@ tasks {
     shadowJar {
         relocate("com.tcoded.folialib", "fr.maxlego08.koth.libs.folia")
         relocate("fr.mrmicky.fastboard", "fr.maxlego08.koth.fastboard")
+        relocate("dev.faststats", "fr.maxlego08.koth.libs.faststats")
 
         rootProject.extra.properties["sha"]?.let { sha ->
             archiveClassifier.set("${rootProject.extra.properties["classifier"]}-${sha}")
