@@ -5,14 +5,13 @@ import java.util.List;
 
 import fr.maxlego08.koth.zcore.utils.ZUtils;
 import org.bukkit.Material;
-import org.bukkit.material.MaterialData;
 
-@SuppressWarnings("deprecation")
 public class Button extends ZUtils {
 
 	private final int slot;
 	private final String name;
-	private final MaterialData item;
+	private final Material item;
+	private final int data;
 	private final List<String> lore;
 
 	/**
@@ -27,7 +26,8 @@ public class Button extends ZUtils {
 		super();
 		this.slot = slot;
 		this.name = name;
-		this.item = new MaterialData(material, (byte) data);
+		this.item = material;
+		this.data = data;
 		this.lore = lore;
 	}
 
@@ -81,8 +81,12 @@ public class Button extends ZUtils {
 	/**
 	 * @return the item
 	 */
-	public MaterialData getItem() {
+	public Material getItem() {
 		return item;
+	}
+
+	public int getData() {
+		return data;
 	}
 
 	/**

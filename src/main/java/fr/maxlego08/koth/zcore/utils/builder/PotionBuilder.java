@@ -105,17 +105,6 @@ public class PotionBuilder extends ItemBuilder {
 		return (PotionMeta) super.getMeta();
 	}
 	
-	@SuppressWarnings("deprecation")
-	/**
-	 * 
-	 * @param potionEffectType
-	 * @return
-	 */
-	public PotionBuilder effect(PotionEffectType potionEffectType) {
-		this.getMeta().setMainEffect(potionEffectType);
-		return this;
-	}
-
 	/**
 	 * 
 	 * @param potionEffectType

@@ -17,16 +17,13 @@ import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-@SuppressWarnings("deprecation")
 public class AdapterListener extends ZUtils implements Listener {
 
     private final KothPlugin plugin;
@@ -78,11 +75,6 @@ public class AdapterListener extends ZUtils implements Listener {
     }
 
     @EventHandler
-    public void onPlayerTalk(AsyncPlayerChatEvent event) {
-        this.plugin.getListenerAdapters().forEach(adapter -> adapter.onPlayerTalk(event, event.getMessage()));
-    }
-
-    @EventHandler
     public void onCraftItem(CraftItemEvent event) {
         this.plugin.getListenerAdapters().forEach(adapter -> adapter.onCraftItem(event));
     }
@@ -124,11 +116,6 @@ public class AdapterListener extends ZUtils implements Listener {
      * adapter.onItemisOnGround(event, event.getPlayer(), item,
      * item.getLocation())); } }); }
      */
-
-    @EventHandler
-    public void onPick(PlayerPickupItemEvent event) {
-        this.plugin.getListenerAdapters().forEach(adapter -> adapter.onPickUp(event, event.getPlayer()));
-    }
 
     @EventHandler
     public void onMobSpawn(CreatureSpawnEvent event) {

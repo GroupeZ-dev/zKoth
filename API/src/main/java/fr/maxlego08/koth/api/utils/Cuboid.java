@@ -574,11 +574,25 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 	 *            - The block ID to check for
 	 * @return true if this Cuboid contains only blocks of the given type
 	 */
+	@Deprecated(since = "3.2.1", forRemoval = false)
 	@SuppressWarnings("deprecation")
 	public boolean containsOnly(int blockId) {
 		for (Block b : this) {
 			if (b.getType().getId() != blockId)
 				return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Check if the Cuboid contains only blocks of the given material.
+	 *
+	 * @param material material to check for
+	 * @return true if this Cuboid contains only blocks of the given material
+	 */
+	public boolean containsOnly(Material material) {
+		for (Block block : this) {
+			if (block.getType() != material) return false;
 		}
 		return true;
 	}

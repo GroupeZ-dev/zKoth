@@ -137,8 +137,8 @@ public class ZInventoryManager extends ListenerAdapter {
 				Logger.info("An error has occurred with the menu ! " + gui.getClass().getName());
 				return;
 			}
-			if (event.getView() != null && gui.getPlayer().equals(player)
-					&& event.getView().getTitle().equals(gui.getGuiName())) {
+			if (gui.getPlayer().equals(player)
+					&& event.getView().getTopInventory().equals(gui.getInventory())) {
 
 				event.setCancelled(gui.isDisableClick());
 

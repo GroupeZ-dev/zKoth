@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.URL;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -93,7 +93,6 @@ public class Metrics {
      * @param pluginId The id of the plugin.
      *                 It can be found at <a href="https://bstats.org/what-is-my-plugin-id">What is my plugin id?</a>
      */
-    @SuppressWarnings("deprecation")
 	public Metrics(Plugin plugin, int pluginId) {
         if (plugin == null) {
             throw new IllegalArgumentException("Plugin cannot be null!");
@@ -121,12 +120,12 @@ public class Metrics {
             config.addDefault("logResponseStatusText", false);
 
             // Inform the server owners about bStats
-            config.options().header(
-                    "bStats collects some data for plugin authors like how many servers are using their plugins.\n" +
-                            "To honor their work, you should not disable it.\n" +
-                            "This has nearly no effect on the server performance!\n" +
-                            "Check out https://bStats.org/ to learn more :)"
-            ).copyDefaults(true);
+            config.options().setHeader(List.of(
+                    "bStats collects some data for plugin authors like how many servers are using their plugins.",
+                    "To honor their work, you should not disable it.",
+                    "This has nearly no effect on the server performance!",
+                    "Check out https://bStats.org/ to learn more :)"
+            )).copyDefaults(true);
             try {
                 config.save(configFile);
             } catch (IOException ignored) { }
@@ -211,7 +210,7 @@ public class Metrics {
         JsonObject data = new JsonObject();
 
         String pluginName = "zAuctionHouseV2";
-        String pluginVersion = plugin.getDescription().getVersion();
+        String pluginVersion = plugin.getPluginMeta().getVersion();
 
         data.addProperty("pluginName", pluginName); // Append the name of the plugin
         data.addProperty("id", pluginId); // Append the id of the plugin
@@ -280,7 +279,6 @@ public class Metrics {
     /**
      * Collects the data and sends it afterwards.
      */
-    @SuppressWarnings("deprecation")
 	private void submitData() {
         final JsonObject data = getServerData();
 
@@ -302,7 +300,7 @@ public class Metrics {
                                     Method jsonStringGetter = jsonObjectJsonSimple.getDeclaredMethod("toJSONString");
                                     jsonStringGetter.setAccessible(true);
                                     String jsonString = (String) jsonStringGetter.invoke(plugin);
-                                    JsonObject object = new JsonParser().parse(jsonString).getAsJsonObject();
+                                    JsonObject object = JsonParser.parseString(jsonString).getAsJsonObject();
                                     pluginData.add(object);
                                 }
                             } catch (ClassNotFoundException e) {
@@ -350,7 +348,7 @@ public class Metrics {
         if (logSentData) {
             plugin.getLogger().info("Sending data to bStats: " + data);
         }
-        HttpsURLConnection connection = (HttpsURLConnection) new URL(URL).openConnection();
+        HttpsURLConnection connection = (HttpsURLConnection) URI.create(URL).toURL().openConnection();
 
         // Compress the data to save bandwidth
         byte[] compressedData = compress(data.toString());

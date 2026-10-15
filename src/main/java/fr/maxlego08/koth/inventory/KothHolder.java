@@ -1,6 +1,7 @@
 package fr.maxlego08.koth.inventory;
 
 import fr.maxlego08.koth.api.Koth;
+import fr.maxlego08.koth.zcore.utils.LegacyText;
 import fr.maxlego08.koth.zcore.utils.inventory.Pagination;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -22,7 +23,7 @@ public class KothHolder implements InventoryHolder {
     public KothHolder(Koth koth, int page) {
         this.koth = koth;
         this.page = page;
-        this.inventory = Bukkit.createInventory(this, 54, "§8Loot §7" + koth.getName());
+        this.inventory = Bukkit.createInventory(this, 54, LegacyText.component("§8Loot §7" + koth.getName()));
 
         Pagination<ItemStack> pagination = new Pagination<>();
         List<ItemStack> itemStacks = new ArrayList<>(koth.getItemStacks());
