@@ -63,6 +63,11 @@ allprojects {
         options.release = 25
     }
 
+    // Any use of a deprecated, removed or unchecked API fails the build, so the plugin stays on supported Paper APIs.
+    tasks.withType<JavaCompile> {
+        options.compilerArgs.addAll(listOf("-Xlint:deprecation,removal,unchecked", "-Werror"))
+    }
+
     tasks.withType<Jar> {
         isPreserveFileTimestamps = false
         isReproducibleFileOrder = true

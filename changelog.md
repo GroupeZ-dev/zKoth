@@ -1,5 +1,15 @@
 # Unreleased
 
+- The plugin now requires Paper 26.2 and Java 25. All deprecated Bukkit, Bungee and NMS code was replaced with Paper and Adventure APIs
+- Hex colors (``#RRGGBB`` and ``&x&R&R&G&G&B&B``) are now kept in item names, lore, messages, titles and inventory titles
+- Loot items are now saved in Paper's NBT format (``paper:...``), which Paper migrates automatically on Minecraft updates. Items saved in older formats are still loaded and converted on the next save; an unreadable item is skipped with a console error instead of breaking the koth
+- Enchantments and potion effects accept registry keys (``sharpness``, ``minecraft:strength``) as well as old Bukkit names (``DAMAGE_ALL``, ``INCREASE_DAMAGE``)
+- Fixed HuskTowns: the hook listened to a Lands event, so it failed to register without Lands and town disbands were never detected
+- Fixed saved potion effects failing to load with recent Paper versions
+- Fixed ``randomEndCommands`` entries with a missing ``percent`` or ``commands`` value crashing the koth loading
+- The selection axe no longer depends on how its name colors are written in the configuration
+- API: ``Cuboid#containsOnly(int)`` is replaced by ``Cuboid#containsOnly(Material)`` and ``Cuboid#containsOnlyAir()``
+
 # 3.2.2
 
 - Added team capture transfer: when the capturing player leaves the zone, dies or disconnects, a teammate already inside the zone takes over the capture without resetting the timer (``teamCaptureTransfer`` in ``config.yml``)
