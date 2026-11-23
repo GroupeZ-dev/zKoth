@@ -43,26 +43,59 @@ public class DiscordWebhook {
         this.url = url;
     }
 
+    /**
+     * Sets the plain text content of the message.
+     *
+     * @param content the message content
+     */
     public void setContent(String content) {
         this.content = content;
     }
 
+    /**
+     * Overrides the webhook username.
+     *
+     * @param username the username
+     */
     public void setUsername(String username) {
         this.username = username;
     }
 
+    /**
+     * Overrides the webhook avatar.
+     *
+     * @param avatarUrl the avatar URL
+     */
     public void setAvatarUrl(String avatarUrl) {
         this.avatarUrl = avatarUrl;
     }
 
+    /**
+     * Enables or disables text-to-speech.
+     *
+     * @param tts true to send the message as TTS
+     */
     public void setTts(boolean tts) {
         this.tts = tts;
     }
 
+    /**
+     * Adds an embed to the message.
+     *
+     * @param embed the embed to add
+     */
     public void addEmbed(EmbedObject embed) {
         this.embeds.add(embed);
     }
 
+    /**
+     * Sends the message asynchronously, replacing the KOTH placeholders.
+     *
+     * @param plugin the plugin used to schedule the asynchronous request
+     * @param koth   the KOTH whose placeholders are applied
+     * @throws IOException if the message cannot be built
+     * @throws IllegalArgumentException if neither content nor embed is set
+     */
     public void execute(Plugin plugin, Koth koth) throws IOException {
         if (this.content == null && this.embeds.isEmpty()) {
             throw new IllegalArgumentException("Set content or add at least one EmbedObject");
@@ -178,6 +211,9 @@ public class DiscordWebhook {
         });
     }
 
+    /**
+     * Discord embed bound to a {@link KothEvent}.
+     */
     public static class EmbedObject {
 
         private final KothEvent event;
@@ -191,6 +227,12 @@ public class DiscordWebhook {
         private String image;
         private Author author;
 
+        /**
+         * Loads an embed from the configuration.
+         *
+         * @param configuration the configuration to read from
+         * @param path          the path prefix of the embed, ending with a dot
+         */
         public EmbedObject(YamlConfiguration configuration, String path) {
 
             KothEvent event;
@@ -213,86 +255,195 @@ public class DiscordWebhook {
             this.fields = ((List<Map<String, Object>>) list).stream().map(Field::new).collect(Collectors.toList());
         }
 
+        /**
+         * Returns the event that triggers this embed.
+         *
+         * @return the event that triggers this embed
+         */
         public KothEvent getEvent() {
             return event;
         }
 
+        /**
+         * Returns the title.
+         *
+         * @return the title
+         */
         public String getTitle() {
             return title;
         }
 
+        /**
+         * Returns this embed.
+         *
+         * @param title the title
+         * @return this embed
+         */
         public EmbedObject setTitle(String title) {
             this.title = title;
             return this;
         }
 
+        /**
+         * Returns the description.
+         *
+         * @return the description
+         */
         public String getDescription() {
             return description;
         }
 
+        /**
+         * Returns this embed.
+         *
+         * @param description the description
+         * @return this embed
+         */
         public EmbedObject setDescription(String description) {
             this.description = description;
             return this;
         }
 
+        /**
+         * Returns the URL of the title.
+         *
+         * @return the URL of the title
+         */
         public String getUrl() {
             return url;
         }
 
+        /**
+         * Returns this embed.
+         *
+         * @param url the URL of the title
+         * @return this embed
+         */
         public EmbedObject setUrl(String url) {
             this.url = url;
             return this;
         }
 
+        /**
+         * Returns the color.
+         *
+         * @return the color
+         */
         public DiscordColor getColor() {
             return color;
         }
 
+        /**
+         * Returns this embed.
+         *
+         * @param color the color
+         * @return this embed
+         */
         public EmbedObject setColor(DiscordColor color) {
             this.color = color;
             return this;
         }
 
+        /**
+         * Returns the footer.
+         *
+         * @return the footer
+         */
         public Footer getFooter() {
             return footer;
         }
 
+        /**
+         * Returns the thumbnail URL.
+         *
+         * @return the thumbnail URL
+         */
         public String getThumbnail() {
             return thumbnail;
         }
 
+        /**
+         * Returns this embed.
+         *
+         * @param url the thumbnail URL
+         * @return this embed
+         */
         public EmbedObject setThumbnail(String url) {
             this.thumbnail = url;
             return this;
         }
 
+        /**
+         * Returns the image URL.
+         *
+         * @return the image URL
+         */
         public String getImage() {
             return image;
         }
 
+        /**
+         * Returns this embed.
+         *
+         * @param url the image URL
+         * @return this embed
+         */
         public EmbedObject setImage(String url) {
             this.image = url;
             return this;
         }
 
+        /**
+         * Returns the author.
+         *
+         * @return the author
+         */
         public Author getAuthor() {
             return author;
         }
 
+        /**
+         * Returns the fields.
+         *
+         * @return the fields
+         */
         public List<Field> getFields() {
             return fields;
         }
 
+        /**
+         * Returns this embed.
+         *
+         * @param text the footer text
+         * @param icon the footer icon URL
+         * @return this embed
+         */
         public EmbedObject setFooter(String text, String icon) {
             this.footer = new Footer(text, icon);
             return this;
         }
 
+        /**
+         * Returns this embed.
+         *
+         * @param name the author name
+         * @param url  the author URL
+         * @param icon the author icon URL
+         * @return this embed
+         */
         public EmbedObject setAuthor(String name, String url, String icon) {
             this.author = new Author(name, url, icon);
             return this;
         }
 
+        /**
+         * Returns this embed.
+         *
+         * @param name   the field name
+         * @param value  the field value
+         * @param inline whether the field is displayed inline
+         * @return this embed
+         */
         public EmbedObject addField(String name, String value, boolean inline) {
             this.fields.add(new Field(name, value, inline));
             return this;

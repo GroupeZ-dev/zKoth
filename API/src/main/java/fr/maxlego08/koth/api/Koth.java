@@ -104,10 +104,17 @@ public interface Koth {
      */
     Collection<Player> getAllPlayersNearby();
 
+    /**
+     * Gets the names of the nearby players, separated by commas.
+     *
+     * @return the formatted list of nearby player names
+     */
     String getFormattedPlayersNearbyList();
 
     /**
-     * @return Counts the number of nearby players from {@link Koth#getAllPlayersNearby()}
+     * Counts the number of nearby players from {@link Koth#getAllPlayersNearby()}.
+     *
+     * @return the number of nearby players
      */
     int countNearbyPlayers();
 
@@ -316,16 +323,48 @@ public interface Koth {
      */
     void updateDisplay();
 
+    /**
+     * Gets the score of a player in a SCORE KOTH.
+     *
+     * @param player the player
+     * @return the player's points, or 0 if the player is null or has no points
+     */
     int getScore(Player player);
 
+    /**
+     * Gets the player at the given position in the score ranking.
+     *
+     * @param position the position in the ranking, starting at 1
+     * @return the result at this position, or the default result if there is none
+     */
     PlayerResult getPlayer(int position);
 
+    /**
+     * Gets the identifiers of the teams that cannot capture this KOTH.
+     *
+     * @return the blacklisted team identifiers
+     */
     List<String> getBlacklistTeamId();
 
+    /**
+     * Gets the progress bar configuration of this KOTH.
+     *
+     * @return the progress bar configuration
+     */
     ProgressBar getProgressBar();
 
+    /**
+     * Gets the random reward commands of this KOTH.
+     *
+     * @return the random commands
+     */
     List<RandomCommand> getRandomCommands();
 
+    /**
+     * Gets the maximum number of random command groups executed when the KOTH is won.
+     *
+     * @return the maximum number of random command groups, 0 to disable them
+     */
     int getMaxRandomCommands();
 }
 

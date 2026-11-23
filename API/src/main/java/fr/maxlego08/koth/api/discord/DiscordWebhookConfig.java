@@ -11,12 +11,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Discord webhook configuration, loaded from the {@code webhook} section of a KOTH file.
+ */
 public class DiscordWebhookConfig {
 
     private final String url;
     private final boolean isEnable;
     private final List<DiscordWebhook.EmbedObject> embeds = new ArrayList<>();
 
+    /**
+     * Creates a new {@code DiscordWebhookConfig}.
+     *
+     * @param configuration the KOTH configuration to read from
+     */
     public DiscordWebhookConfig(YamlConfiguration configuration) {
         super();
         this.url = configuration.getString("webhook.url", "https://discord.com/api/webhooks/xxxxx/xxxxxxxxxxxx");
@@ -30,18 +38,40 @@ public class DiscordWebhookConfig {
         }
     }
 
+    /**
+     * Returns the webhook URL.
+     *
+     * @return the webhook URL
+     */
     public String getUrl() {
         return url;
     }
 
+    /**
+     * Returns whether the webhook is enabled.
+     *
+     * @return whether the webhook is enabled
+     */
     public boolean isEnable() {
         return isEnable;
     }
 
+    /**
+     * Returns the configured embeds, one per {@link KothEvent}.
+     *
+     * @return the configured embeds, one per {@link KothEvent}
+     */
     public List<DiscordWebhook.EmbedObject> getEmbeds() {
         return embeds;
     }
 
+    /**
+     * Sends the embed configured for the given event, if the webhook is enabled.
+     *
+     * @param plugin the plugin used to run the request
+     * @param koth   the KOTH whose placeholders are applied to the embed
+     * @param event  the event that triggered the message
+     */
     public void send(Plugin plugin, Koth koth, KothEvent event) {
 
         if (this.isEnable) {

@@ -14,16 +14,25 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
+/**
+ * This class is a region/cuboid from one location to another. It can be
+ * used for blocks protection and things like WorldEdit.
+ *
+ * @author desht (Original code), KingFaris10 (Editor of code)
+ */
 public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializable {
 
 	/**
-	 * This class is a region/cuboid from one location to another. It can be
-	 * used for blocks protection and things like WorldEdit.
-	 * 
-	 * @author desht (Original code), KingFaris10 (Editor of code)
+	 * Name of the world containing the cuboid.
 	 */
 	protected final String worldName;
+	/**
+	 * Coordinates of the minimum corner.
+	 */
 	protected final int x1, y1, z1;
+	/**
+	 * Coordinates of the maximum corner.
+	 */
 	protected final int x2, y2, z2;
 
 	/**
@@ -174,9 +183,10 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 	}
 
 	/**
-	 * Get the blocks in the Cuboid.
+	 * Get the blocks of the given material in the Cuboid.
 	 *
-	 * @return The blocks in the Cuboid
+	 * @param material The material to look for
+	 * @return The blocks of this material in the Cuboid
 	 */
 	public List<Block> getBlocks(Material material) {
 		Iterator<Block> blockI = this.iterator();
@@ -676,12 +686,26 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 				+ "," + this.y2 + "," + this.z2);
 	}
 
+	/**
+	 * Iterator over every block of a cuboid.
+	 */
 	public class CuboidIterator implements Iterator<Block> {
 		private World w;
 		private int baseX, baseY, baseZ;
 		private int x, y, z;
 		private int sizeX, sizeY, sizeZ;
 
+		/**
+		 * Creates a new {@code CuboidIterator}.
+		 *
+		 * @param w  the world
+		 * @param x1 the minimum X coordinate
+		 * @param y1 the minimum Y coordinate
+		 * @param z1 the minimum Z coordinate
+		 * @param x2 the maximum X coordinate
+		 * @param y2 the maximum Y coordinate
+		 * @param z2 the maximum Z coordinate
+		 */
 		public CuboidIterator(World w, int x1, int y1, int z1, int x2, int y2, int z2) {
 			this.w = w;
 			this.baseX = x1;
@@ -713,9 +737,36 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 		}
 	}
 
+	/**
+	 * Direction relative to a cuboid.
+	 */
 	public enum CuboidDirection {
-		North, East, South, West, Up, Down, Horizontal, Vertical, Both, Unknown;
+		/** Towards negative Z. */
+		North,
+		/** Towards positive X. */
+		East,
+		/** Towards positive Z. */
+		South,
+		/** Towards negative X. */
+		West,
+		/** Towards positive Y. */
+		Up,
+		/** Towards negative Y. */
+		Down,
+		/** Along the X and Z axes. */
+		Horizontal,
+		/** Along the Y axis. */
+		Vertical,
+		/** Along every axis. */
+		Both,
+		/** Unknown direction. */
+		Unknown;
 
+		/**
+		 * Returns the opposite direction.
+		 *
+		 * @return the opposite direction
+		 */
 		public CuboidDirection opposite() {
 			switch (this) {
 			case North:

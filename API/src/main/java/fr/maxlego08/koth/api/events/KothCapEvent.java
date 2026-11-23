@@ -4,6 +4,9 @@ import fr.maxlego08.koth.api.Koth;
 import org.bukkit.entity.Player;
 
 
+/**
+ * Called every second while a player is capturing a KOTH.
+ */
 public class KothCapEvent extends KothEvent {
 
 	private final Koth koth;
@@ -11,6 +14,14 @@ public class KothCapEvent extends KothEvent {
 	private final int timer;
 	private final String teamName;
 
+	/**
+	 * Creates a new {@code KothCapEvent}.
+	 *
+	 * @param koth     the KOTH being captured
+	 * @param player   the capturing player
+	 * @param timer    the current capture timer, in seconds
+	 * @param teamName the name of the capturing player's team
+	 */
 	public KothCapEvent(Koth koth, Player player, int timer, String teamName) {
 		super();
 		this.koth = koth;
@@ -20,6 +31,8 @@ public class KothCapEvent extends KothEvent {
 	}
 
 	/**
+	 * Returns the koth.
+	 *
 	 * @return the koth
 	 */
 	public Koth getKoth() {
@@ -27,6 +40,8 @@ public class KothCapEvent extends KothEvent {
 	}
 
 	/**
+	 * Returns the player.
+	 *
 	 * @return the player
 	 */
 	public Player getPlayer() {
@@ -34,6 +49,8 @@ public class KothCapEvent extends KothEvent {
 	}
 
 	/**
+	 * Returns the timer.
+	 *
 	 * @return the timer
 	 */
 	public int getTimer() {
@@ -41,7 +58,9 @@ public class KothCapEvent extends KothEvent {
 	}
 
 	/**
-	 * @return the factionName
+	 * Returns the team name.
+	 *
+	 * @return the team name
 	 */
 	public String getTeamName() {
 		return teamName;

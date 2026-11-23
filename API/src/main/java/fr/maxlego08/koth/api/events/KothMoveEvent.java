@@ -3,6 +3,9 @@ package fr.maxlego08.koth.api.events;
 import fr.maxlego08.koth.api.Koth;
 import org.bukkit.Location;
 
+/**
+ * Called when the zone of a KOTH is moved.
+ */
 public class KothMoveEvent extends CancelledKothEvent {
 
     private final Koth koth;
@@ -10,9 +13,11 @@ public class KothMoveEvent extends CancelledKothEvent {
     private Location newMinLocation;
 
     /**
-     * @param koth
-     * @param newMaxLocation
-     * @param newMinLocation
+     * Creates a new {@code KothMoveEvent}.
+     *
+     * @param koth           the moved KOTH
+     * @param newMaxLocation the new maximum corner of the zone
+     * @param newMinLocation the new minimum corner of the zone
      */
     public KothMoveEvent(Koth koth, Location newMaxLocation, Location newMinLocation) {
         super();
@@ -22,6 +27,8 @@ public class KothMoveEvent extends CancelledKothEvent {
     }
 
     /**
+     * Returns the koth.
+     *
      * @return the koth
      */
     public Koth getKoth() {
@@ -29,6 +36,8 @@ public class KothMoveEvent extends CancelledKothEvent {
     }
 
     /**
+     * Returns the newMaxLocation.
+     *
      * @return the newMaxLocation
      */
     public Location getNewMaxLocation() {
@@ -36,6 +45,8 @@ public class KothMoveEvent extends CancelledKothEvent {
     }
 
     /**
+     * Sets the newMaxLocation.
+     *
      * @param newMaxLocation the newMaxLocation to set
      */
     public void setNewMaxLocation(Location newMaxLocation) {
@@ -43,6 +54,8 @@ public class KothMoveEvent extends CancelledKothEvent {
     }
 
     /**
+     * Returns the newMinLocation.
+     *
      * @return the newMinLocation
      */
     public Location getNewMinLocation() {
@@ -50,6 +63,8 @@ public class KothMoveEvent extends CancelledKothEvent {
     }
 
     /**
+     * Sets the newMinLocation.
+     *
      * @param newMinLocation the newMinLocation to set
      */
     public void setNewMinLocation(Location newMinLocation) {

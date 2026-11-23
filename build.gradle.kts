@@ -72,6 +72,9 @@ allprojects {
         options.encoding = "UTF-8"
         if (JavaVersion.current().isJava9Compatible)
             (options as StandardJavadocDocletOptions).addBooleanOption("html5", true)
+        // Only the public API must be fully documented; the plugin and its hooks are internal code.
+        if (project.path != ":API")
+            (options as StandardJavadocDocletOptions).addBooleanOption("Xdoclint:all,-missing", true)
     }
 
     dependencies {
