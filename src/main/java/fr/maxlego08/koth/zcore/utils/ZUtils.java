@@ -568,9 +568,7 @@ public abstract class ZUtils extends MessageUtils {
     }
 
     protected Enchantment enchantFromString(String str) {
-        for (Enchantment enchantment : Enchantment.values())
-            if (enchantment.getName().equalsIgnoreCase(str)) return enchantment;
-        return null;
+        return LegacyKeys.enchantment(str);
     }
 
     /**
@@ -780,12 +778,7 @@ public abstract class ZUtils extends MessageUtils {
      * @return
      */
     protected PotionEffectType getPotion(String configuration) {
-        for (PotionEffectType effectType : PotionEffectType.values()) {
-            if (effectType.getName().equalsIgnoreCase(configuration)) {
-                return effectType;
-            }
-        }
-        return null;
+        return LegacyKeys.potionEffect(configuration);
     }
 
     /**
