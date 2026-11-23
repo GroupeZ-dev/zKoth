@@ -79,7 +79,6 @@ allprojects {
 
     dependencies {
         compileOnly("io.papermc.paper:paper-api:26.2.build.112-stable")
-        compileOnly("com.mojang:authlib:3.11.50") // TODO step 4: replaced by Paper PlayerProfile
 
         implementation("com.github.cryptomorin:XSeries:13.7.1")
         implementation("fr.mrmicky:fastboard:2.2.0")

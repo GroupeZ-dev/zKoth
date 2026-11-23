@@ -1,6 +1,7 @@
 package fr.maxlego08.koth.zcore.utils;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 import java.util.regex.Matcher;
@@ -41,6 +42,29 @@ public final class LegacyText {
      */
     public static Component component(String legacyText) {
         return SECTION.deserialize(legacyText == null ? "" : legacyText);
+    }
+
+    /**
+     * Convertit un texte en composant pour un nom ou une lore d'item. L'italique est désactivé par défaut,
+     * comme le faisait {@code ItemMeta#setDisplayName(String)} : sans cela, Minecraft affiche les noms et
+     * les lores personnalisés en italique.
+     *
+     * @param legacyText le texte, peut être null
+     * @return le composant correspondant
+     */
+    public static Component itemComponent(String legacyText) {
+        return component(legacyText).decorationIfAbsent(TextDecoration.ITALIC, TextDecoration.State.FALSE);
+    }
+
+    /**
+     * Normalise un texte coloré en le faisant passer par un composant, pour comparer deux textes
+     * qui s'affichent de la même façon (ex : {@code §l§a} et {@code §a}).
+     *
+     * @param legacyText le texte, peut être null
+     * @return le texte normalisé
+     */
+    public static String normalize(String legacyText) {
+        return serialize(component(legacyText));
     }
 
     /**

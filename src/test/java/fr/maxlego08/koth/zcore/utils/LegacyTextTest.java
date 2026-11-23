@@ -2,6 +2,7 @@ package fr.maxlego08.koth.zcore.utils;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -47,6 +48,21 @@ class LegacyTextTest {
     void hexColorSurvivesComponentRoundTrip() {
         String legacy = LegacyText.colorize("#ff8800zKoth axe");
         assertEquals(legacy, LegacyText.serialize(LegacyText.component(legacy)));
+    }
+
+    @Test
+    void itemComponentIsNotItalicByDefault() {
+        Component component = LegacyText.itemComponent("§aName");
+        assertEquals(TextDecoration.State.FALSE, component.decoration(TextDecoration.ITALIC));
+        assertEquals(TextDecoration.State.TRUE, LegacyText.itemComponent("§oItalic").children().isEmpty()
+                ? LegacyText.itemComponent("§oItalic").decoration(TextDecoration.ITALIC)
+                : LegacyText.itemComponent("§oItalic").children().get(0).decoration(TextDecoration.ITALIC));
+    }
+
+    @Test
+    void normalizeMakesEquivalentCodesComparable() {
+        assertEquals(LegacyText.normalize("§aName"), LegacyText.serialize(LegacyText.itemComponent("§aName")));
+        assertEquals(LegacyText.normalize("§x§f§f§8§8§0§0Axe"), LegacyText.serialize(LegacyText.itemComponent("§x§f§f§8§8§0§0Axe")));
     }
 
     @Test

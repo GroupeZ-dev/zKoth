@@ -1,8 +1,8 @@
 package fr.maxlego08.koth.zcore.utils;
 
 import com.google.common.base.Strings;
-import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
+import com.destroystokyo.paper.profile.PlayerProfile;
+import com.destroystokyo.paper.profile.ProfileProperty;
 import fr.maxlego08.koth.KothPlugin;
 import fr.maxlego08.koth.api.utils.ProgressBar;
 import fr.maxlego08.koth.zcore.enums.EnumInventory;
@@ -162,11 +162,11 @@ public abstract class ZUtils extends MessageUtils {
     }
 
     protected boolean same(ItemStack itemStack, String name) {
-        return this.hasDisplayName(itemStack) && itemStack.getItemMeta().getDisplayName().equals(name);
+        return this.hasDisplayName(itemStack) && LegacyText.serialize(itemStack.getItemMeta().displayName()).equals(LegacyText.normalize(name));
     }
 
     protected boolean contains(ItemStack itemStack, String name) {
-        return this.hasDisplayName(itemStack) && itemStack.getItemMeta().getDisplayName().contains(name);
+        return this.hasDisplayName(itemStack) && LegacyText.serialize(itemStack.getItemMeta().displayName()).contains(name);
     }
 
     protected void removeItemInHand(Player player) {
@@ -742,25 +742,13 @@ public abstract class ZUtils extends MessageUtils {
      * @return itemstack
      */
     public ItemStack playerHead(ItemStack itemStack, OfflinePlayer player) {
-        String name = itemStack.hasItemMeta() && itemStack.getItemMeta().hasDisplayName() ? itemStack.getItemMeta().getDisplayName() : null;
-        if (NmsVersion.nmsVersion.isNewMaterial()) {
-            if (itemStack.getType().equals(Material.PLAYER_HEAD) && name != null && name.startsWith("HEAD")) {
-                SkullMeta meta = (SkullMeta) itemStack.getItemMeta();
-                name = name.replace("HEAD", "");
-                if (name.length() == 0) meta.setDisplayName(null);
-                else meta.setDisplayName(name);
-                meta.setOwningPlayer(player);
-                itemStack.setItemMeta(meta);
-            }
-        } else {
-            if (itemStack.getType().equals(getMaterial(397)) && itemStack.getData().getData() == 3 && name != null && name.startsWith("HEAD")) {
-                SkullMeta meta = (SkullMeta) itemStack.getItemMeta();
-                name = name.replace("HEAD", "");
-                if (name.length() == 0) meta.setDisplayName(null);
-                else meta.setDisplayName(name);
-                meta.setOwner(player.getName());
-                itemStack.setItemMeta(meta);
-            }
+        String name = itemStack.hasItemMeta() && itemStack.getItemMeta().hasDisplayName() ? LegacyText.serialize(itemStack.getItemMeta().displayName()) : null;
+        if (itemStack.getType() == Material.PLAYER_HEAD && name != null && name.startsWith("HEAD")) {
+            SkullMeta meta = (SkullMeta) itemStack.getItemMeta();
+            name = name.replace("HEAD", "");
+            meta.displayName(name.isEmpty() ? null : LegacyText.itemComponent(name));
+            meta.setOwningPlayer(player);
+            itemStack.setItemMeta(meta);
         }
         return itemStack;
     }
@@ -771,7 +759,7 @@ public abstract class ZUtils extends MessageUtils {
      * @return itemstack
      */
     protected ItemStack playerHead() {
-        return NmsVersion.nmsVersion.isNewMaterial() ? new ItemStack(Material.PLAYER_HEAD) : new ItemStack(getMaterial(397), 1, (byte) 3);
+        return ItemStack.of(Material.PLAYER_HEAD);
     }
 
     /**
@@ -831,18 +819,9 @@ public abstract class ZUtils extends MessageUtils {
         if (url.isEmpty()) return head;
 
         SkullMeta headMeta = (SkullMeta) head.getItemMeta();
-        GameProfile profile = new GameProfile(UUID.randomUUID(), "random_name");
-
-        profile.getProperties().put("textures", new Property("textures", url));
-
-        try {
-            Field profileField = headMeta.getClass().getDeclaredField("profile");
-            profileField.setAccessible(true);
-            profileField.set(headMeta, profile);
-
-        } catch (IllegalArgumentException | NoSuchFieldException | SecurityException | IllegalAccessException error) {
-            error.printStackTrace();
-        }
+        PlayerProfile profile = Bukkit.createProfile(UUID.randomUUID(), "random_name");
+        profile.setProperty(new ProfileProperty("textures", url));
+        headMeta.setPlayerProfile(profile);
         head.setItemMeta(headMeta);
         return head;
     }
@@ -854,9 +833,7 @@ public abstract class ZUtils extends MessageUtils {
      * @return boolean
      */
     protected boolean isPlayerHead(ItemStack itemStack) {
-        Material material = itemStack.getType();
-        if (NmsVersion.nmsVersion.isNewMaterial()) return material.equals(Material.PLAYER_HEAD);
-        return (material.equals(getMaterial(397))) && (itemStack.getDurability() == 3);
+        return itemStack.getType() == Material.PLAYER_HEAD;
     }
 
     /**

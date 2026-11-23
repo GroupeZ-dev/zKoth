@@ -2,7 +2,7 @@ package fr.maxlego08.koth.zcore.utils;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.reflect.InvocationTargetException;
+import java.net.URI;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,13 +12,12 @@ import java.util.concurrent.Executors;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import com.destroystokyo.paper.profile.ProfileProperty;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
 
 /**
- * 
+ *
  * Based on
  * https://www.spigotmc.org/threads/how-to-get-a-players-texture.244966/
  *
@@ -64,25 +63,25 @@ public class PlayerSkin {
 	}
 
 	public static String[] getFromPlayer(Player playerBukkit) {
-		GameProfile profile = getProfile(playerBukkit);
-		Property property = profile.getProperties().get("textures").iterator().next();
-		String texture = property.getValue();
-		String signature = property.getSignature();
+		ProfileProperty property = playerBukkit.getPlayerProfile().getProperties().stream()
+				.filter(candidate -> candidate.getName().equals("textures"))
+				.findFirst()
+				.orElse(null);
+		if (property == null) return null;
 
-		return new String[] { texture, signature };
+		return new String[] { property.getValue(), property.getSignature() };
 	}
 
-	@SuppressWarnings("deprecation")
 	public static String[] getFromName(String name) {
 		try {
-			URL url_0 = new URL("https://api.mojang.com/users/profiles/minecraft/" + name);
+			URL url_0 = URI.create("https://api.mojang.com/users/profiles/minecraft/" + name).toURL();
 			InputStreamReader reader_0 = new InputStreamReader(url_0.openStream());
-			String uuid = new JsonParser().parse(reader_0).getAsJsonObject().get("id").getAsString();
+			String uuid = JsonParser.parseReader(reader_0).getAsJsonObject().get("id").getAsString();
 
-			URL url_1 = new URL(
-					"https://sessionserver.mojang.com/session/minecraft/profile/" + uuid + "?unsigned=false");
+			URL url_1 = URI.create(
+					"https://sessionserver.mojang.com/session/minecraft/profile/" + uuid + "?unsigned=false").toURL();
 			InputStreamReader reader_1 = new InputStreamReader(url_1.openStream());
-			JsonObject textureProperty = new JsonParser().parse(reader_1).getAsJsonObject().get("properties")
+			JsonObject textureProperty = JsonParser.parseReader(reader_1).getAsJsonObject().get("properties")
 					.getAsJsonArray().get(0).getAsJsonObject();
 			String texture = textureProperty.get("value").getAsString();
 			String signature = textureProperty.get("signature").getAsString();
@@ -93,23 +92,6 @@ public class PlayerSkin {
 			e.printStackTrace();
 			return null;
 		}
-	}
-
-	public static GameProfile getProfile(Player player) {
-
-		try {
-			Object entityPlayer = player.getClass().getMethod("getHandle").invoke(player);
-			return (GameProfile) entityPlayer.getClass().getMethod(getMethodName()).invoke(entityPlayer);
-		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
-				| SecurityException e) {
-			e.printStackTrace();
-		}
-
-		return null;
-	}
-
-	public static String getMethodName() {
-		return "getProfile";
 	}
 
 }
