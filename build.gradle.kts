@@ -78,13 +78,21 @@ allprojects {
     }
 
     dependencies {
-        compileOnly("io.papermc.paper:paper-api:26.2.build.62-beta")
-        compileOnly("com.mojang:authlib:3.11.50")
+        compileOnly("io.papermc.paper:paper-api:26.2.build.112-stable")
+        compileOnly("com.mojang:authlib:3.11.50") // TODO step 4: replaced by Paper PlayerProfile
 
         implementation("com.github.cryptomorin:XSeries:13.7.1")
         implementation("fr.mrmicky:fastboard:2.2.0")
         implementation("com.tcoded:FoliaLib:0.5.1")
         implementation("fr.maxlego08.sarah:sarah:1.23")
+
+        testImplementation("io.papermc.paper:paper-api:26.2.build.112-stable")
+        testImplementation("org.junit.jupiter:junit-jupiter:5.13.4")
+        testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.13.4")
+    }
+
+    tasks.test {
+        useJUnitPlatform()
     }
 
     tasks.shadowJar {
