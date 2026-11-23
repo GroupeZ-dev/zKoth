@@ -1,9 +1,10 @@
 package fr.maxlego08.koth.zcore.utils;
 
-import java.lang.reflect.Constructor;
+import java.time.Duration;
 import java.util.List;
 
 import fr.maxlego08.koth.zcore.utils.nms.NmsVersion;
+import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -120,7 +121,7 @@ public abstract class MessageUtils extends LocationUtils {
 	}
 
 	protected void broadcast(String message) {
-		Bukkit.broadcastMessage(Message.PREFIX.msg() + message);
+		Bukkit.broadcast(LegacyText.component(Message.PREFIX.msg() + message));
 	}
 
 	protected void actionMessage(Player player, Message message, Object... args) {
@@ -144,16 +145,6 @@ public abstract class MessageUtils extends LocationUtils {
 		return message;
 	}
 
-	protected final Class<?> getNMSClass(String name) {
-		try {
-			return Class.forName("net.minecraft.server."
-					+ Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3] + "." + name);
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
 	/**
 	 * Send title to player
 	 * 
@@ -165,51 +156,18 @@ public abstract class MessageUtils extends LocationUtils {
 	 * @param fadeOutTime
 	 */
 	protected void title(Player player, String title, String subtitle, int fadeInTime, int showTime, int fadeOutTime) {
-
-		if (NmsVersion.nmsVersion.isNewMaterial()) {
-			player.sendTitle(title, subtitle, fadeInTime, showTime, fadeOutTime);
-			return;
-		}
-
-		try {
-			Object chatTitle = getNMSClass("IChatBaseComponent").getDeclaredClasses()[0].getMethod("a", String.class)
-					.invoke(null, "{\"text\": \"" + title + "\"}");
-			Constructor<?> titleConstructor = getNMSClass("PacketPlayOutTitle").getConstructor(
-					getNMSClass("PacketPlayOutTitle").getDeclaredClasses()[0], getNMSClass("IChatBaseComponent"),
-					int.class, int.class, int.class);
-			Object packet = titleConstructor.newInstance(
-					getNMSClass("PacketPlayOutTitle").getDeclaredClasses()[0].getField("TITLE").get(null), chatTitle,
-					fadeInTime, showTime, fadeOutTime);
-
-			Object chatsTitle = getNMSClass("IChatBaseComponent").getDeclaredClasses()[0].getMethod("a", String.class)
-					.invoke(null, "{\"text\": \"" + subtitle + "\"}");
-			Constructor<?> timingTitleConstructor = getNMSClass("PacketPlayOutTitle").getConstructor(
-					getNMSClass("PacketPlayOutTitle").getDeclaredClasses()[0], getNMSClass("IChatBaseComponent"),
-					int.class, int.class, int.class);
-			Object timingPacket = timingTitleConstructor.newInstance(
-					getNMSClass("PacketPlayOutTitle").getDeclaredClasses()[0].getField("SUBTITLE").get(null),
-					chatsTitle, fadeInTime, showTime, fadeOutTime);
-
-			sendPacket(player, packet);
-			sendPacket(player, timingPacket);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		player.showTitle(Title.title(LegacyText.component(title), LegacyText.component(subtitle),
+				Title.Times.times(ticks(fadeInTime), ticks(showTime), ticks(fadeOutTime))));
 	}
 
 	/**
-	 * 
-	 * @param player
-	 * @param packet
+	 * Convertit une durée en ticks en {@link Duration}.
+	 *
+	 * @param ticks nombre de ticks
+	 * @return la durée correspondante
 	 */
-	protected final void sendPacket(Player player, Object packet) {
-		try {
-			Object handle = player.getClass().getMethod("getHandle").invoke(player);
-			Object playerConnection = handle.getClass().getField("playerConnection").get(handle);
-			playerConnection.getClass().getMethod("sendPacket", getNMSClass("Packet")).invoke(playerConnection, packet);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	private Duration ticks(int ticks) {
+		return Duration.ofMillis(Math.max(0, ticks) * 50L);
 	}
 
 	private final transient static int CENTER_PX = 154;

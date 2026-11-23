@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import fr.maxlego08.koth.exceptions.InventoryOpenException;
+import fr.maxlego08.koth.zcore.utils.LegacyText;
 import fr.maxlego08.koth.zcore.utils.ZUtils;
 import fr.maxlego08.koth.zcore.utils.inventory.InventoryResult;
 import org.bukkit.Bukkit;
@@ -52,7 +53,7 @@ public abstract class VInventory extends ZUtils implements Cloneable {
 
 	protected void createInventory(String name, int size) {
 		this.guiName = name;
-		this.inventory = Bukkit.createInventory(null, size, name);
+		this.inventory = Bukkit.createInventory(null, size, LegacyText.component(name));
 	}
 
 	/**
@@ -60,7 +61,7 @@ public abstract class VInventory extends ZUtils implements Cloneable {
 	 */
 	private void createDefaultInventory() {
 		if (this.inventory == null) {
-			this.inventory = Bukkit.createInventory(null, 54, "§cDefault Inventory");
+			this.inventory = Bukkit.createInventory(null, 54, LegacyText.component("§cDefault Inventory"));
 		}
 	}
 
