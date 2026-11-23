@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class KothLoader extends ZUtils implements Loader<Koth> {
@@ -72,7 +73,7 @@ public class KothLoader extends ZUtils implements Loader<Koth> {
             kothLootType = KothLootType.NONE;
         }
 
-        List<ItemStack> itemStacks = configuration.getStringList("loot.items").stream().map(ItemStackUtils::deserializeItemStack).collect(Collectors.toList());
+        List<ItemStack> itemStacks = configuration.getStringList("loot.items").stream().map(ItemStackUtils::deserializeItemStack).filter(Objects::nonNull).collect(Collectors.toList());
         int randomItemStacks = configuration.getInt("loot.random", 0);
 
         List<String> blacklistTeamId = configuration.getStringList("blacklistTeamId");

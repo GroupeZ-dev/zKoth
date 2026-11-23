@@ -11,7 +11,6 @@ import fr.maxlego08.koth.zcore.enums.Permission;
 import fr.maxlego08.koth.zcore.utils.builder.CooldownBuilder;
 import fr.maxlego08.koth.zcore.utils.builder.TimerBuilder;
 import fr.maxlego08.koth.zcore.utils.nms.ItemStackUtils;
-import fr.maxlego08.koth.zcore.utils.nms.NmsVersion;
 import fr.maxlego08.koth.zcore.utils.players.ActionBar;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -40,7 +39,6 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -65,22 +63,6 @@ import java.util.stream.Stream;
 public abstract class ZUtils extends MessageUtils {
 
     private static final List<String> teleportPlayers = new ArrayList<String>();
-    // For plugin support from 1.8 to 1.12
-    private static Material[] byId;
-
-    static {
-        if (!NmsVersion.nmsVersion.isNewMaterial()) {
-            byId = new Material[0];
-            for (Material material : Material.values()) {
-                if (byId.length > material.getId()) {
-                    byId[material.getId()] = material;
-                } else {
-                    byId = Arrays.copyOfRange(byId, 0, material.getId() + 2);
-                    byId[material.getId()] = material;
-                }
-            }
-        }
-    }
 
     /**
      * Allows to encode an itemstack in base64
@@ -139,17 +121,6 @@ public abstract class ZUtils extends MessageUtils {
     protected void give(Player player, ItemStack item) {
         if (hasInventoryFull(player)) player.getWorld().dropItem(player.getLocation(), item);
         else player.getInventory().addItem(item);
-    }
-
-    /**
-     * Allows to return a material according to its ID Works only for plugins
-     * from 1.8 to 1.12
-     *
-     * @param id
-     * @return the material according to his id
-     */
-    protected Material getMaterial(int id) {
-        return byId.length > id && id >= 0 ? byId[id] : Material.AIR;
     }
 
     /**
@@ -840,7 +811,7 @@ public abstract class ZUtils extends MessageUtils {
      */
     protected Object getPrivateField(Object object, String field) throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
         Class<?> clazz = object.getClass();
-        Field objectField = field.equals("commandMap") ? clazz.getDeclaredField(field) : field.equals("knownCommands") ? NmsVersion.nmsVersion.isNewMaterial() ? clazz.getSuperclass().getDeclaredField(field) : clazz.getDeclaredField(field) : null;
+        Field objectField = field.equals("commandMap") ? clazz.getDeclaredField(field) : field.equals("knownCommands") ? clazz.getSuperclass().getDeclaredField(field) : null;
         objectField.setAccessible(true);
         Object result = objectField.get(object);
         objectField.setAccessible(false);
