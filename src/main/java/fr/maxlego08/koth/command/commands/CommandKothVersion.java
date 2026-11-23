@@ -16,7 +16,7 @@ public class CommandKothVersion extends VCommand {
     @Override
     protected CommandType perform(KothPlugin plugin) {
 
-        message(this.sender, "§aVersion du plugin§7: §2" + plugin.getDescription().getVersion());
+        message(this.sender, "§aVersion du plugin§7: §2" + plugin.getPluginMeta().getVersion());
         message(this.sender, "§aAuteur§7: §2Maxlego08");
         message(this.sender, "§aDiscord§7: §2http://discord.groupez.dev/");
         message(this.sender, "§aBuy it for §d8€§7: §2https://groupez.dev/resources/zKoth.9");

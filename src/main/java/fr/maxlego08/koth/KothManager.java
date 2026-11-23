@@ -13,13 +13,15 @@ import fr.maxlego08.koth.loader.KothLoader;
 import fr.maxlego08.koth.zcore.enums.Message;
 import fr.maxlego08.koth.zcore.logger.Logger;
 import fr.maxlego08.koth.api.utils.Cuboid;
+import fr.maxlego08.koth.zcore.utils.LegacyText;
 import fr.maxlego08.koth.zcore.utils.ZUtils;
 import fr.maxlego08.koth.zcore.utils.builder.ItemBuilder;
 import fr.maxlego08.koth.zcore.utils.loader.Loader;
 import fr.maxlego08.koth.zcore.utils.storage.Persist;
 import fr.maxlego08.koth.zcore.utils.storage.Savable;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.TextComponent;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -259,32 +261,22 @@ public class KothManager extends ZUtils implements Savable {
 
     private void buildKothMessage(Player player, Koth koth) {
 
-        TextComponent component = buildTextComponent("§7§l» §f" + koth.getName() + " ");
-
         Cuboid cuboid = koth.getCuboid();
         Location center = cuboid.getCenter();
         String location = center.getWorld().getName() + ", " + center.getBlockX() + ", " + center.getBlockY() + ", " + center.getBlockZ();
+        Component component = LegacyText.component("§7§l» §f" + koth.getName() + " ")
+                .hoverEvent(HoverEvent.showText(LegacyText.component("§7Location: §f" + location)))
+                .append(action("§8(§aSpawn§8)", "/zkoth spawn " + koth.getName(), "§7Click for spawn koth"))
+                .append(action(" §8(§eSpawn now§8)", "/zkoth now " + koth.getName(), "§7Click for spawn koth now"))
+                .append(action(" §8(§cDelete§8)", "/zkoth delete " + koth.getName(), "§7Click for delete koth"));
+        player.sendMessage(component);
 
-        setHoverMessage(component, "§7Location: §f" + location);
+    }
 
-        TextComponent spawn = buildTextComponent("§8(§aSpawn§8)");
-        setClickAction(spawn, ClickEvent.Action.SUGGEST_COMMAND, "/zkoth spawn " + koth.getName());
-        setHoverMessage(spawn, "§7Click for spawn koth");
-
-        TextComponent now = buildTextComponent(" §8(§eSpawn now§8)");
-        setClickAction(now, ClickEvent.Action.SUGGEST_COMMAND, "/zkoth now " + koth.getName());
-        setHoverMessage(now, "§7Click for spawn koth now");
-
-        TextComponent delete = buildTextComponent(" §8(§cDelete§8)");
-        setClickAction(delete, ClickEvent.Action.SUGGEST_COMMAND, "/zkoth delete " + koth.getName());
-        setHoverMessage(delete, "§7Click for delete koth");
-
-        component.addExtra(spawn);
-        component.addExtra(now);
-        component.addExtra(delete);
-
-        player.spigot().sendMessage(component);
-
+    private Component action(String text, String command, String hover) {
+        return LegacyText.component(text)
+                .clickEvent(ClickEvent.suggestCommand(command))
+                .hoverEvent(HoverEvent.showText(LegacyText.component(hover)));
     }
 
     public void deleteKoth(CommandSender sender, String name) {

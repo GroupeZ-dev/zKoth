@@ -3,15 +3,11 @@ package fr.maxlego08.koth.zcore.utils.nms;
 import fr.maxlego08.koth.zcore.utils.Base64;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.io.BukkitObjectInputStream;
-import org.bukkit.util.io.BukkitObjectOutputStream;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
 
 /**
  * @author sya-ri
@@ -19,22 +15,21 @@ import java.util.zip.GZIPOutputStream;
  */
 public class Base64ItemStack {
 
+    private static final String PAPER_PREFIX = "paper:";
 
     public static String encode(ItemStack item) {
-        try {
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            GZIPOutputStream gzipOutputStream = new GZIPOutputStream(byteArrayOutputStream);
-            ObjectOutputStream objectOutputStream = new BukkitObjectOutputStream(gzipOutputStream);
-            objectOutputStream.writeObject(item);
-            objectOutputStream.close();
-            return Base64.encode(byteArrayOutputStream.toByteArray());
-        } catch (IOException exception) {
-            exception.printStackTrace();
-            return null;
-        }
+        return PAPER_PREFIX + Base64.encode(item.serializeAsBytes());
     }
 
     public static ItemStack decode(String data) {
+        if (data.startsWith(PAPER_PREFIX)) {
+            return ItemStack.deserializeBytes(Base64.decode(data.substring(PAPER_PREFIX.length())));
+        }
+        return decodeLegacy(data);
+    }
+
+    @SuppressWarnings("deprecation")
+    private static ItemStack decodeLegacy(String data) {
         try {
             ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(Base64.decode(data));
             GZIPInputStream gzipInputStream = new GZIPInputStream(byteArrayInputStream);

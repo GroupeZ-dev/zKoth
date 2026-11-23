@@ -19,7 +19,7 @@ public abstract class TranslationHelper {
 
         }
         if (itemStack.hasItemMeta() && itemStack.getItemMeta().hasDisplayName()) {
-            return itemStack.getItemMeta().getDisplayName();
+            return LegacyText.serialize(itemStack.getItemMeta().displayName());
         }
 
         String name = itemStack.serialize().get("type").toString().replace("_", " ").toLowerCase();
@@ -39,7 +39,7 @@ public abstract class TranslationHelper {
 
         }
         if (itemStack.hasItemMeta() && itemStack.getItemMeta().hasDisplayName()) {
-            return itemStack.getItemMeta().getDisplayName();
+            return LegacyText.serialize(itemStack.getItemMeta().displayName());
         }
 
         String name = itemStack.serialize().get("type").toString().replace("_", " ").toLowerCase();

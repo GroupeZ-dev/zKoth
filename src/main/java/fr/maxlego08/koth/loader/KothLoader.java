@@ -84,9 +84,13 @@ public class KothLoader extends ZUtils implements Loader<Koth> {
         List<?> list = configuration.getList("randomEndCommands.commands", null);
         if (list != null) {
             list.forEach(value -> {
-                if (value instanceof Map<?, ?>) {
-                    Map<?, ?> map = (Map<?, ?>) value;
-                    randomCommands.add(new RandomCommand(((Number) map.get("percent")).intValue(), (List<String>) map.get("commands")));
+                if (value instanceof Map<?, ?> map && map.get("percent") instanceof Number percent
+                        && map.get("commands") instanceof List<?> commands) {
+                    List<String> commandList = commands.stream()
+                            .filter(String.class::isInstance)
+                            .map(String.class::cast)
+                            .toList();
+                    randomCommands.add(new RandomCommand(percent.intValue(), commandList));
                 }
             });
         }

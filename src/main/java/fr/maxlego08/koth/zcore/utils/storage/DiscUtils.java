@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.net.URI;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 
@@ -80,7 +81,7 @@ public class DiscUtils {
 
 	public static boolean downloadUrl(String urlstring, File file) {
 		try {
-			URL url = new URL(urlstring);
+			URL url = URI.create(urlstring).toURL();
 			ReadableByteChannel rbc = Channels.newChannel(url.openStream());
 			@SuppressWarnings("resource")
 			FileOutputStream fos = new FileOutputStream(file);

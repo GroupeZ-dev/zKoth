@@ -3,12 +3,10 @@ package fr.maxlego08.koth;
 import fr.maxlego08.koth.api.Koth;
 import fr.maxlego08.koth.board.Board;
 import fr.maxlego08.koth.board.ColorBoard;
-import fr.maxlego08.koth.board.EmptyBoard;
 import fr.maxlego08.koth.inventory.KothHolder;
 import fr.maxlego08.koth.listener.ListenerAdapter;
 import fr.maxlego08.koth.save.Config;
 import fr.maxlego08.koth.zcore.enums.Message;
-import fr.maxlego08.koth.zcore.utils.nms.NmsVersion;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -35,7 +33,7 @@ public class KothListener extends ListenerAdapter {
 
     private final KothPlugin plugin;
     private final KothManager manager;
-    private final Board board = NmsVersion.nmsVersion.isHexVersion() ? new ColorBoard() : new EmptyBoard();
+    private final Board board = new ColorBoard();
     private long playerMoveEventCooldown = 0;
 
     public KothListener(KothPlugin plugin, KothManager manager) {
@@ -46,13 +44,13 @@ public class KothListener extends ListenerAdapter {
     @Override
     protected void onInteract(PlayerInteractEvent event, Player player) {
 
-        ItemStack itemStack = player.getItemInHand();
+        ItemStack itemStack = player.getInventory().getItemInMainHand();
 
         if (itemStack != null && event.getClickedBlock() != null && same(itemStack, Message.AXE_NAME.getMessage())) {
 
             event.setCancelled(true);
 
-            if (!NmsVersion.nmsVersion.isOneHand() && event.getHand() == EquipmentSlot.OFF_HAND) return;
+            if (event.getHand() == EquipmentSlot.OFF_HAND) return;
 
             Optional<Selection> optional = this.manager.getSelection(player.getUniqueId());
             Selection selection = null;
@@ -69,19 +67,16 @@ public class KothListener extends ListenerAdapter {
 
             LivingEntity entity = null;
 
-            if (NmsVersion.nmsVersion.isHexVersion()) {
+            Shulker shulker = location.getWorld().spawn(location, Shulker.class);
+            shulker.setInvulnerable(true);
+            shulker.setAI(false);
+            shulker.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 99999, 1, false, false));
+            shulker.setInvisible(true);
+            shulker.setCollidable(false);
 
-                Shulker shulker = location.getWorld().spawn(location, Shulker.class);
-                shulker.setInvulnerable(true);
-                shulker.setAI(false);
-                shulker.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 99999, 1, false, false));
-                shulker.setInvisible(true);
-                shulker.setCollidable(false);
+            entity = shulker;
 
-                entity = shulker;
-
-                Bukkit.getScheduler().runTaskLater(this.plugin, shulker::remove, SHULKER_REMOVE_DELAY_TICKS);
-            }
+            Bukkit.getScheduler().runTaskLater(this.plugin, shulker::remove, SHULKER_REMOVE_DELAY_TICKS);
 
             selection.action(action, location, entity);
 

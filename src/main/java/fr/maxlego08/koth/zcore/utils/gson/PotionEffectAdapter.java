@@ -56,12 +56,9 @@ public class PotionEffectAdapter extends TypeAdapter<PotionEffect> {
 		return this.plugin.getGson().toJson(serial);
 	}
 
-	@SuppressWarnings("deprecation")
 	private PotionEffect fromRaw(String raw) {
 		Map<String, Object> keys = this.plugin.getGson().fromJson(raw, seriType);
-		return new PotionEffect(PotionEffectType.getById(((Double) keys.get(TYPE)).intValue()),
-				((Double) keys.get(DURATION)).intValue(), ((Double) keys.get(AMPLIFIER)).intValue(),
-				(Boolean) keys.get(AMBIENT));
+		return new PotionEffect(keys);
 	}
 
 }
