@@ -5,7 +5,6 @@ import java.util.List;
 
 import fr.maxlego08.koth.zcore.utils.nms.NmsVersion;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -223,7 +222,7 @@ public abstract class MessageUtils extends LocationUtils {
 	protected String getCenteredMessage(String message) {
 		if (message == null || message.equals(""))
 			return "";
-		message = ChatColor.translateAlternateColorCodes('&', message);
+		message = LegacyText.translateAmpersand(message);
 
 		int messagePxSize = 0;
 		boolean previousCode = false;

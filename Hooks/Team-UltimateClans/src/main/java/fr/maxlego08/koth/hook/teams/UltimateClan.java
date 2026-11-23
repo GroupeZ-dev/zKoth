@@ -6,7 +6,6 @@ import me.ulrich.clans.Clans;
 import me.ulrich.clans.data.ClanData;
 import me.ulrich.clans.events.ClanDeleteEvent;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -14,9 +13,12 @@ import org.bukkit.event.EventHandler;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class UltimateClan implements KothTeam {
+
+    private static final Pattern AMPERSAND_CODE = Pattern.compile("(?i)&([0-9A-FK-ORX])");
 
     private final KothPlugin plugin;
     private final Clans clans;
@@ -29,7 +31,7 @@ public class UltimateClan implements KothTeam {
     @Override
     public String getTeamName(OfflinePlayer player) {
         Optional<ClanData> optional = this.clans.getPlayerAPI().getPlayerClan(player.getUniqueId());
-        return optional.isPresent() ? ChatColor.translateAlternateColorCodes('&', optional.get().getTag()) : player.getName();
+        return optional.isPresent() ? AMPERSAND_CODE.matcher(optional.get().getTag()).replaceAll("§$1") : player.getName();
     }
 
     @Override

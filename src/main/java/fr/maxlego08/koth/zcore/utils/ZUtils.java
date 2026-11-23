@@ -19,7 +19,6 @@ import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.HoverEvent.Action;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -465,19 +464,7 @@ public abstract class ZUtils extends MessageUtils {
      */
     protected String color(String message) {
         if (message == null) return null;
-
-        message = ColorTransformer.transformColors(message);
-
-        if (NmsVersion.nmsVersion.isHexVersion()) {
-            Pattern pattern = Pattern.compile("#[a-fA-F0-9]{6}");
-            Matcher matcher = pattern.matcher(message);
-            while (matcher.find()) {
-                String color = message.substring(matcher.start(), matcher.end());
-                message = message.replace(color, String.valueOf(net.md_5.bungee.api.ChatColor.of(color)));
-                matcher = pattern.matcher(message);
-            }
-        }
-        return net.md_5.bungee.api.ChatColor.translateAlternateColorCodes('&', message);
+        return LegacyText.colorize(ColorTransformer.transformColors(message));
     }
 
     /**
@@ -485,19 +472,7 @@ public abstract class ZUtils extends MessageUtils {
      * @return
      */
     protected String colorReverse(String message) {
-        if (message == null) return null;
-
-        Pattern pattern = Pattern.compile(net.md_5.bungee.api.ChatColor.COLOR_CHAR + "x[a-fA-F0-9-" + net.md_5.bungee.api.ChatColor.COLOR_CHAR + "]{12}");
-        Matcher matcher = pattern.matcher(message);
-        while (matcher.find()) {
-            String color = message.substring(matcher.start(), matcher.end());
-            String colorReplace = color.replace("§x", "#");
-            colorReplace = colorReplace.replace("§", "");
-            message = message.replace(color, colorReplace);
-            matcher = pattern.matcher(message);
-        }
-
-        return message.replace("§", "&");
+        return LegacyText.reverseColors(message);
     }
 
     /**
@@ -774,9 +749,7 @@ public abstract class ZUtils extends MessageUtils {
      * @return
      */
     protected String removeColor(String message) {
-        for (ChatColor color : ChatColor.values())
-            message = message.replace("§" + color.getChar(), "").replace("&" + color.getChar(), "");
-        return message;
+        return LegacyText.stripColors(message);
     }
 
     /**
