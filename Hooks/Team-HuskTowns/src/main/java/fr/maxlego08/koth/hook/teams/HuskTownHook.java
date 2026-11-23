@@ -2,13 +2,14 @@ package fr.maxlego08.koth.hook.teams;
 
 import fr.maxlego08.koth.api.KothPlugin;
 import fr.maxlego08.koth.api.KothTeam;
-import me.angeschossen.lands.api.events.LandDeleteEvent;
 import net.william278.husktowns.api.HuskTownsAPI;
+import net.william278.husktowns.events.TownDisbandEvent;
 import net.william278.husktowns.town.Town;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -58,9 +59,9 @@ public class HuskTownHook implements KothTeam {
         return optional.map(town -> String.valueOf(town.getId())).orElseGet(player::getName);
     }
 
-    @EventHandler
-    public void onDelete(LandDeleteEvent event) {
-        this.plugin.onTeamDisband(String.valueOf(event.getLand().getId()));
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onDisband(TownDisbandEvent event) {
+        this.plugin.onTeamDisband(String.valueOf(event.getTown().getId()));
     }
 
 }

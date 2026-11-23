@@ -252,7 +252,7 @@ public class DiscordWebhook {
             this.image = configuration.getString(path + "image", null);
             this.author = new Author(configuration, path);
             List<?> list = configuration.getList(path + "fields", new ArrayList<>());
-            this.fields = ((List<Map<String, Object>>) list).stream().map(Field::new).collect(Collectors.toList());
+            this.fields = list.stream().filter(Map.class::isInstance).map(value -> new Field((Map<?, ?>) value)).collect(Collectors.toList());
         }
 
         /**
@@ -515,8 +515,8 @@ public class DiscordWebhook {
                 this.inline = inline;
             }
 
-            private Field(Map<String, Object> map) {
-                this((String) map.get("name"), (String) map.get("value"), (boolean) map.get("inline"));
+            private Field(Map<?, ?> map) {
+                this((String) map.get("name"), (String) map.get("value"), Boolean.TRUE.equals(map.get("inline")));
             }
 
             private String getName() {

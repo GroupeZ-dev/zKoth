@@ -44,7 +44,7 @@ public class KothListener extends ListenerAdapter {
     @Override
     protected void onInteract(PlayerInteractEvent event, Player player) {
 
-        ItemStack itemStack = player.getItemInHand();
+        ItemStack itemStack = player.getInventory().getItemInMainHand();
 
         if (itemStack != null && event.getClickedBlock() != null && same(itemStack, Message.AXE_NAME.getMessage())) {
 
